@@ -1,0 +1,3 @@
+[submodule "Assets/LamagzLib"]
+	path = Assets/LamagzLib
+	url = https://github.com/BourgoisAlexis/LamagzLib
