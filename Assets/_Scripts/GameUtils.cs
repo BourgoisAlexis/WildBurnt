@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public static class GameUtils {
@@ -9,5 +10,12 @@ public static class GameUtils {
             result[i] = new TileData(Random.Range(0, 5));
 
         return result;
+    }
+
+    public static void AnimateRectTransform(this GameObject go) {
+        RectTransform rect = go.GetComponent<RectTransform>();
+        rect.localPosition = Vector3.zero;
+        rect.localScale = Vector3.zero;
+        rect.DOScale(Vector3.one, GameConsts.ANIM_DURATION);
     }
 }

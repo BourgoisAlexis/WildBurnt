@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -14,33 +15,40 @@ public class GameView : MonoBehaviour {
     [SerializeField] private GameObject _tilePrefab;
 
     private RectTransform _rectTransform;
+    private ConnectionManager _connectionManager;
     [SerializeField] private TextMeshProUGUI _tmproMessage;
-    [SerializeField] private List<TileView[]> _tileRows;
-    [SerializeField] private int _showingRows = 4;
+    private List<TileView[]> _tileRows;
 
-    private int _currentRowIndex => _tileRows.Count - _showingRows;
+    private int _currentRowIndex => _tileRows.Count - GameConsts.SHOWING_ROWS;
     #endregion
 
 
 
     private void Awake() {
+        _connectionManager = GetComponent<ConnectionManager>();
         _rectTransform = GetComponent<RectTransform>();
         _tileRows = new List<TileView[]>();
     }
 
-    public void ShowMessage(string message) {
+    public async void ShowMessage(string message) {
+        _tmproMessage.maxVisibleCharacters = 0;
         _tmproMessage.text = message;
+
+        while (_tmproMessage.maxVisibleCharacters < message.Length) {
+            _tmproMessage.maxVisibleCharacters++;
+            await Task.Delay(10);
+        }
     }
+
 
     public void AddCard() {
         GameObject go = Instantiate(_cardPrefab, _mid);
-        RectTransform rect = go.GetComponent<RectTransform>();
-        rect.localPosition = Vector3.zero;
-        rect.localScale = Vector3.zero;
-        rect.DOScale(Vector3.one, UIConsts.ANIM_DURATION);
+        go.AnimateRectTransform();
     }
 
-    public void CreateTileRow(TileData[] tileDatas) {
+
+    //Tiles
+    public void AddTileRow(TileData[] tileDatas) {
         int size = tileDatas.Length;
         _tileRows.Add(new TileView[size]);
 
@@ -54,17 +62,17 @@ public class GameView : MonoBehaviour {
 
         for (int i = 0; i < size; i++) {
             Vector2 pos = new Vector2(i * stepH - offsetH, 0);
-            _tileRows.Last()[i] = AddTile(pos, tileDatas[i]);
+            _tileRows.Last()[i] = AddTile(pos, tileDatas[i], i);
         }
 
         //Vertical
-        float stepV = midSize.y / (float)(_showingRows + 1);
+        float stepV = midSize.y / (float)(GameConsts.SHOWING_ROWS + 1);
         float offsetV = midSize.y / 2 - stepV;
 
         for (int i = 0; i < _tileRows.Count; i++) {
             float y = 0;
 
-            if (_tileRows.Count < _showingRows)
+            if (_tileRows.Count < GameConsts.SHOWING_ROWS)
                 y = i * stepV - offsetV;
             else if (i >= _currentRowIndex)
                 y = (i - _currentRowIndex) * stepV - offsetV;
@@ -73,22 +81,32 @@ public class GameView : MonoBehaviour {
 
             foreach (TileView tile in _tileRows[i]) {
                 RectTransform rect = tile.GetComponent<RectTransform>();
-                rect.DOLocalMoveY(y, UIConsts.ANIM_DURATION);
+                rect.DOLocalMoveY(y, GameConsts.ANIM_DURATION);
             }
         }
     }
 
-    private TileView AddTile(Vector2 position, TileData datas) {
+    private TileView AddTile(Vector2 position, TileData datas, int index) {
         GameObject go = Instantiate(_tilePrefab, _mid);
-        RectTransform rect = go.GetComponent<RectTransform>();
         TileView tile = go.GetComponent<TileView>();
 
-        rect.localPosition = position;
-        rect.localScale = Vector3.zero;
-        rect.DOScale(Vector3.one, UIConsts.ANIM_DURATION);
+        go.AnimateRectTransform();
+        go.transform.localPosition = position;
 
-        tile.Init(datas);
+        tile.Init(datas, index, this);
 
         return tile;
+    }
+
+    public void DisplayVotes(List<int> votes) {
+        TileView[] tiles = _tileRows[_currentRowIndex + 1];
+        foreach (TileView tile in tiles)
+            tile.DisplayVotes(votes);
+    }
+
+
+    //Actions
+    public void ClickOnTile(int index) {
+        _connectionManager.SendMessage(MessageType.Vote, index.ToString());
     }
 }
