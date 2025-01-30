@@ -8,13 +8,13 @@ public class TileView : MonoBehaviour {
 
     private TileData _tileData;
     private int _index;
-    private GameView _gameView;
+    private ViewMap _viewMap;
 
 
-    public void Init(TileData tileData, int index, GameView gameView) {
+    public void Init(TileData tileData, int index, ViewMap viewMap) {
         _tileData = tileData;
         _index = index;
-        _gameView = gameView;
+        _viewMap = viewMap;
 
         foreach (GameObject spot in _spots)
             spot.transform.localScale = Vector3.zero;
@@ -35,6 +35,6 @@ public class TileView : MonoBehaviour {
     }
 
     private void OnClick() {
-        _gameView.ClickOnTile(_index);
+        _viewMap.ClickOnTile(_index);
     }
 }
