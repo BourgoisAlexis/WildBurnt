@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
-public class GameView : MonoBehaviour {
+public class GameView : SubManager {
     #region Variables
     [SerializeField] private RectTransform _top;
     [SerializeField] private RectTransform _mid;
@@ -15,17 +15,16 @@ public class GameView : MonoBehaviour {
     [SerializeField] private GameObject _tilePrefab;
 
     private RectTransform _rectTransform;
-    private ConnectionManager _connectionManager;
     [SerializeField] private TextMeshProUGUI _tmproMessage;
     private List<TileView[]> _tileRows;
 
-    private int _currentRowIndex => _tileRows.Count - GameConsts.SHOWING_ROWS;
+    private int _currentRowIndex => _tileRows.Count - GameUtilsAndConsts.SHOWING_ROWS;
+    private int _nextRowIndex => _currentRowIndex + 1;
+    private ConnectionManager _connectionManager => _manager.ConnectionManager;
     #endregion
 
 
-
     private void Awake() {
-        _connectionManager = GetComponent<ConnectionManager>();
         _rectTransform = GetComponent<RectTransform>();
         _tileRows = new List<TileView[]>();
     }
@@ -66,13 +65,13 @@ public class GameView : MonoBehaviour {
         }
 
         //Vertical
-        float stepV = midSize.y / (float)(GameConsts.SHOWING_ROWS + 1);
+        float stepV = midSize.y / (float)(GameUtilsAndConsts.SHOWING_ROWS + 1);
         float offsetV = midSize.y / 2 - stepV;
 
         for (int i = 0; i < _tileRows.Count; i++) {
             float y = 0;
 
-            if (_tileRows.Count < GameConsts.SHOWING_ROWS)
+            if (_tileRows.Count < GameUtilsAndConsts.SHOWING_ROWS)
                 y = i * stepV - offsetV;
             else if (i >= _currentRowIndex)
                 y = (i - _currentRowIndex) * stepV - offsetV;
@@ -80,8 +79,9 @@ public class GameView : MonoBehaviour {
                 y = -midSize.y;
 
             foreach (TileView tile in _tileRows[i]) {
+                tile.SetInteractable(i == _nextRowIndex);
                 RectTransform rect = tile.GetComponent<RectTransform>();
-                rect.DOLocalMoveY(y, GameConsts.ANIM_DURATION);
+                rect.DOLocalMoveY(y, GameUtilsAndConsts.ANIM_DURATION);
             }
         }
     }
@@ -99,7 +99,7 @@ public class GameView : MonoBehaviour {
     }
 
     public void DisplayVotes(List<int> votes) {
-        TileView[] tiles = _tileRows[_currentRowIndex + 1];
+        TileView[] tiles = _tileRows[_nextRowIndex];
         foreach (TileView tile in tiles)
             tile.DisplayVotes(votes);
     }
@@ -107,6 +107,7 @@ public class GameView : MonoBehaviour {
 
     //Actions
     public void ClickOnTile(int index) {
-        _connectionManager.SendMessage(MessageType.Vote, index.ToString());
+        if (_manager.GameModel.GamePhase == GamePhase.VotingForDestination)
+            _connectionManager.SendMessage(MessageType.Vote, index);
     }
 }

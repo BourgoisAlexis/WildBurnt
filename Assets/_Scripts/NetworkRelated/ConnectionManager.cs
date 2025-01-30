@@ -2,44 +2,69 @@ using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+using System.Linq;
 
 
-public class ConnectionManager : MonoBehaviour {
+public class ConnectionManager : SubManager {
     #region Variables
+    [SerializeField] private bool _logSentMessages;
+    [SerializeField] private bool _logReceivedMessages;
     [SerializeField] private ConnectionManager _guest;
     [SerializeField] private bool _host;
 
-    private GameView _gameView;
-    private GameModel _gameModel;
     private SimpleTCPConnection<PeerMessageWildBurnt> _connection;
+    private Queue<PeerMessageWildBurnt> _messageQueue;
+    private float _delay;
 
     private bool _askingForID;
     private int _guestID;
 
-    private List<MessageType> _sendToSelf = new List<MessageType> { 
-        MessageType.Vote,
-        MessageType.CreateTileRow,
-    };
+    private GameModel _gameModel => _manager.GameModel;
+    private GameView _gameView => _manager.GameView;
     #endregion
 
 
     private void Awake() {
-        _gameModel = new GameModel();
-        _gameView = GetComponent<GameView>();
         _connection = new SimpleTCPConnection<PeerMessageWildBurnt>();
-    }
-
-    private void Start() {
-        _gameModel.CreatePlayer();
-
-        _connection.Init(OnInit, _host, 1);
-        _connection.OnMessageReceived += ReceivedMessage;
+        _messageQueue = new Queue<PeerMessageWildBurnt>();
     }
 
     private void OnDestroy() {
         _connection?.CloseConnection();
     }
 
+    private void Update() {
+        if (_delay > 0) {
+            _delay -= Time.deltaTime;
+            return;
+        }
+
+        if (_messageQueue.Count > 0) {
+            PeerMessageWildBurnt m = _messageQueue.Dequeue();
+
+            _connection.SendMessage(m);
+
+            _delay = GameUtilsAndConsts.MESSAGE_DELAY;
+
+            if (_logSentMessages)
+                Debug.Log($"{(_host ? "Host" : "Guest")} sent a message : {m.ToString()}");
+
+            if (GameUtilsAndConsts.DONT_SEND_TO_SELF.Contains(m.MessageType))
+                return;
+
+            ReceivedMessage(m);
+        }
+    }
+
+
+    public override void Init(GameManager manager, params object[] parameters) {
+        base.Init(manager, parameters);
+
+        _gameModel.CreatePlayer();
+        _connection.Init(OnInit, _host, 1);
+        _connection.OnMessageReceived += ReceivedMessage;
+    }
 
     private void OnInit(IPEndPoint iPEndPoint) {
         if (_host && _guest != null)
@@ -50,6 +75,7 @@ public class ConnectionManager : MonoBehaviour {
         _connection.Connect(iPEndPoint, AskForID);
     }
 
+
     private async void AskForID() {
         int i = 0;
         _askingForID = true;
@@ -57,7 +83,7 @@ public class ConnectionManager : MonoBehaviour {
         while (_askingForID) {
             SendMessage(MessageType.AskForID);
 
-            await Task.Delay(1000);
+            await Task.Delay(Mathf.RoundToInt(GameUtilsAndConsts.MESSAGE_DELAY * 10 * 1000));
 
             i++;
             if (i > 20) {
@@ -67,20 +93,24 @@ public class ConnectionManager : MonoBehaviour {
         }
     }
 
-
     private void ReceivedMessage(PeerMessageWildBurnt message) {
-        Debug.Log($"{(_host ? "Host" : "Guest")} received a message : {message.ToString()}");
+        if (_logReceivedMessages)
+            Debug.Log($"{(_host ? "Host" : "Guest")} received a message : {message.ToString()}");
+
+        int i = GameUtilsAndConsts.EMPTY_VOTE;
+        string s = GameUtilsAndConsts.EMPTY_MESSAGE;
 
         switch (message.MessageType) {
+            //Connection
             case MessageType.AskForID:
                 if (!_host)
                     break;
 
                 int playerID = _gameModel.CreatePlayer();
-                SendMessage(MessageType.IDAttribution, playerID.ToString());
+                SendMessage(MessageType.GiveID, playerID);
                 break;
 
-            case MessageType.IDAttribution:
+            case MessageType.GiveID:
                 if (_host)
                     break;
 
@@ -90,36 +120,61 @@ public class ConnectionManager : MonoBehaviour {
                 _gameView.ShowMessage($"Got ID : {_guestID}");
                 break;
 
+
+            //Game
+            case MessageType.UpdateGamePhase:
+                Enum.TryParse(message.Message, out GamePhase phase);
+                _gameModel.UpdateGamePhase(phase);
+                _gameView.ShowMessage($"Phase : {_gameModel.GamePhase}");
+                break;
+
+
+            //Vote
             case MessageType.Vote:
-                int value = int.Parse(message.Message);
-                List<int> votes = _gameModel.Vote(message.SenderID, value);
+                i = int.Parse(message.Message);
+                List<int> votes = _gameModel.UpdateVote(message.SenderID, i);
                 _gameView.DisplayVotes(votes);
                 break;
 
-            case MessageType.CreateTileRow:
-                TileData[] datas = JsonUtility.FromJson<JSONableArray<TileData>>(message.Message).Array;
-                _gameView.AddTileRow(datas);
+            case MessageType.VoteTimer:
+                i = int.Parse(message.Message);
+                _gameView.ShowMessage($"Vote Timer : {i}");
+                break;
+
+            case MessageType.VoteEnd:
+                _gameView.ShowMessage($"Vote Ended");
                 break;
 
 
+            //Map
+            case MessageType.MoveToDestination:
+                i = int.Parse(message.Message);
+                _gameView.ShowMessage($"MoveToDestination : {i}");
+                break;
+
+            case MessageType.AddTileRow:
+                TileData[] datas = JsonUtility.FromJson<JSONableArray<TileData>>(message.Message).Array;
+                _gameModel.AddTileRow(datas);
+                _gameView.AddTileRow(_gameModel.TileRows.Last());
+                break;
+
+
+            //Default
             case MessageType.Default:
                 break;
         }
+
+        if (_host)
+            _manager.CheckForGamePhase(message.MessageType);
+    }
+
+
+    public void SendMessage(MessageType messageType, object obj) {
+        SendMessage(messageType, obj.ToString());
     }
 
     public void SendMessage(MessageType messageType, string content = "Empty") {
         PeerMessageWildBurnt m = new PeerMessageWildBurnt(_guestID, messageType, content);
-        _connection.SendMessage(m);
-
-        if (!_sendToSelf.Contains(messageType))
-            return;
-
-        ReceivedMessage(m);
-    }
-
-    public void Test() {
-        TileData[] datas = GameUtils.CreateTileRow();
-        string json = JsonUtility.ToJson(new JSONableArray<TileData>(datas));
-        SendMessage(MessageType.CreateTileRow, json);
+        _messageQueue.Enqueue(m);
     }
 }

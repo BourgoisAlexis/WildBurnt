@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9ef2ccadcc61bd49b36362a01d23dfa, type: 3}
+  m_Name: UIStyle
+  m_EditorClassIdentifier: 
+  <Sprite>k__BackingField: {fileID: 21300000, guid: 97cbc812a0b2f2248a487b281db92be1, type: 3}
+  <ImageType>k__BackingField: 1
+  <Font>k__BackingField: {fileID: 11400000, guid: 826561b9d560d8e4c85311f8abf37fc8, type: 2}
+  <Dark>k__BackingField: {r: 0.10980393, g: 0.10980393, b: 0.16862746, a: 1}
+  <Light>k__BackingField: {r: 0.86855817, g: 0.86855817, b: 0.97735846, a: 1}
+  <MainColor>k__BackingField: {r: 0.34102526, g: 0.34102526, b: 0.79622644, a: 1}
+  <BackgroundColor>k__BackingField: {r: 0.3414524, g: 0.3414524, b: 0.4490565, a: 1}
+  <Transparent>k__BackingField: {r: 0.34117648, g: 0.34117648, b: 0.45098042, a: 0.19607843}

@@ -1,11 +1,19 @@
 public enum MessageType {
     Default,
 
-    //connection
+    //Connection
     AskForID,
-    IDAttribution,
+    GiveID,
 
-    //Gameplay
+    //Game
+    UpdateGamePhase,
+
+    //Vote
     Vote,
-    CreateTileRow,
+    VoteTimer,
+    VoteEnd,
+
+    //Map
+    MoveToDestination,
+    AddTileRow,
 }
