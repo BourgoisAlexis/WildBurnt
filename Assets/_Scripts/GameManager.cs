@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour {
 
         await Task.Delay(1000);
 
-        StartCountDown(10, (int v) => {
+        StartCountDown(5, (int v) => {
             ConnectionManager.SendMessage(MessageType.VoteTimer, v);
         }, () => {
             ConnectionManager.SendMessage(MessageType.VoteEnd);
@@ -55,15 +55,7 @@ public class GameManager : MonoBehaviour {
     public void CheckForGamePhase(MessageType messageType) {
         if (GameModel.GamePhase == GamePhase.VotingForDestination) {
             if (messageType == MessageType.VoteEnd) {
-                List<int> voteResults = GameModel.GetVoteResults().Select(n => n).Where(n => n != GameUtilsAndConsts.EMPTY_VOTE).ToList();
-                if (voteResults.Count > 1) {
-                    voteResults.Shuffle();
-                }
-                else if (voteResults.Count <= 0) {
-
-                }
-
-                ConnectionManager.SendMessage(MessageType.MoveToDestination, voteResults.First());
+                ConnectionManager.SendMessage(MessageType.MoveToDestination, JsonUtility.ToJson(GameModel.GetVoteResult()));
             }
         }
     }

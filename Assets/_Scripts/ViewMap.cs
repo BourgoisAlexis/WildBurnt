@@ -1,6 +1,5 @@
 using DG.Tweening;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class ViewMap : UIView {
@@ -88,6 +87,9 @@ public class ViewMap : UIView {
         foreach (TileView tile in tiles)
             tile.DisplayVotes(votes);
     }
+
+
+
 
 
     //Actions

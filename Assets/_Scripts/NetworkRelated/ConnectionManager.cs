@@ -130,8 +130,8 @@ public class ConnectionManager : SubManager {
 
             //Map
             case MessageType.MoveToDestination:
-                i = int.Parse(message.Message);
-                _gameView.ShowMessage($"MoveToDestination : {i}");
+                VoteResult result = JsonUtility.FromJson<VoteResult>(message.Message);
+                _gameView.MoveToDestination(result);
                 break;
 
             case MessageType.AddTileRow:

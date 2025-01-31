@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,10 +40,26 @@ public class GameModel {
         return CurrentVote;
     }
 
-    public List<int> GetVoteResults() {
-        int maxCount = CurrentVote.GroupBy(n => n).Max(g => g.Count());
+    public VoteResult GetVoteResult() {
+        VoteResult result = new VoteResult(false, GameUtilsAndConsts.EMPTY_VOTE);
 
-        return CurrentVote.GroupBy(n => n).Where(g => g.Count() == maxCount).Select(g => g.Key).ToList();
+        int maxCount = CurrentVote.GroupBy(n => n).Max(g => g.Count());
+        List<int> voteResults = CurrentVote.GroupBy(n => n).Where(g => g.Count() == maxCount).Select(g => g.Key).ToList();
+        voteResults = voteResults.Select(n => n).Where(n => n != GameUtilsAndConsts.EMPTY_VOTE).ToList();
+
+        if (voteResults.Count > 1) {
+            voteResults.Shuffle();
+            result = new VoteResult(true, voteResults.First());
+        }
+        else if (voteResults.Count <= 0) {
+            int n = UnityEngine.Random.Range(0, TileRows.Last().Length);
+            result = new VoteResult(true, n);
+        }
+        else {
+            result = new VoteResult(false, voteResults.First());
+        }
+
+        return result;
     }
 
     public void ClearVotes() {

@@ -10,6 +10,7 @@ public class GameView : SubManager {
     [Header("Views")]
     [SerializeField] private UIViewManager _viewManager;
     [SerializeField] private ViewMap _viewMap;
+    [SerializeField] private CoinView _coinView;
 
     private ConnectionManager _connectionManager => _manager.ConnectionManager;
     #endregion
@@ -17,6 +18,7 @@ public class GameView : SubManager {
 
     private void Start() {
         _viewManager.Init(this);
+        _coinView.gameObject.SetActive(false);
     }
 
     public async void ShowMessage(string message) {
@@ -37,8 +39,11 @@ public class GameView : SubManager {
         _viewMap.DisplayVotes(votes);
     }
 
-    public void DisplayVoteResults() {
-
+    public void MoveToDestination(VoteResult result) {
+        if (result.Randomized) {
+            _coinView.gameObject.SetActive(true);
+            _coinView.Flip();
+        }
     }
 
     public void ClickOnTile(int index) {
