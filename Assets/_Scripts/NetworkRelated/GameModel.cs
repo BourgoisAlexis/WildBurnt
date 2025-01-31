@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 public struct PlayerModel {
     public int ID;
@@ -16,7 +17,7 @@ public class GameModel {
     public List<PlayerModel> PlayerModels { get; private set; }
     public List<int> CurrentVote { get; private set; }
     public GamePhase GamePhase { get; private set; }
-    public List<TileData[]> TileRows {get; private set;}
+    public List<TileData[]> TileRows { get; private set; }
 
 
     public GameModel() {
@@ -51,6 +52,21 @@ public class GameModel {
 
     public void AddTileRow(TileData[] tileDatas) {
         TileRows.Add(tileDatas);
+
+        StringBuilder sb = new StringBuilder();
+        foreach (TileData[] row in TileRows) {
+            string s = string.Empty;
+            for (int i = 0; i < row.Length; i++) {
+                TileData tileData = row[i];
+                s += tileData.TileType;
+                if (i < row.Length - 1)
+                    s += "-";
+            }
+            sb.AppendLine(s);
+        }
+
+
+        NetworkUtilsAndConsts.Log(sb.ToString());
     }
 
     public void UpdateGamePhase(GamePhase gamePhase) {

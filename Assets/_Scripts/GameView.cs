@@ -37,6 +37,10 @@ public class GameView : SubManager {
         _viewMap.DisplayVotes(votes);
     }
 
+    public void DisplayVoteResults() {
+
+    }
+
     public void ClickOnTile(int index) {
         if (_manager.GameModel.GamePhase == GamePhase.VotingForDestination)
             _connectionManager.SendMessage(MessageType.Vote, index);

@@ -31,7 +31,7 @@ public class ViewMap : UIView {
 
     public void AddTileRow(TileData[] tileDatas) {
         int size = tileDatas.Length;
-        _tileRows.Add(new TileView[size]);
+        TileView[] row = new TileView[size];
 
         Vector2 midSize = _rectTransform.rect.size;
         float ratio = _top.anchorMin.y - _bot.anchorMax.y;
@@ -41,10 +41,13 @@ public class ViewMap : UIView {
         float stepH = midSize.x / (float)(size + 1);
         float offsetH = midSize.x / 2 - stepH;
 
-        for (int i = 0; i < size; i++) {
-            Vector2 pos = new Vector2(i * stepH - offsetH, 0);
-            _tileRows.Last()[i] = AddSingleTile(pos, tileDatas[i], i);
+        foreach (TileData tileData in tileDatas) {
+            int index = tileData.Index;
+            Vector2 pos = new Vector2(index * stepH - offsetH, 0);
+            row[index] = AddSingleTile(pos, tileDatas[index]);
         }
+
+        _tileRows.Add(row);
 
         //Vertical
         float stepV = midSize.y / (float)(GameUtilsAndConsts.SHOWING_ROWS + 1);
@@ -68,14 +71,14 @@ public class ViewMap : UIView {
         }
     }
 
-    private TileView AddSingleTile(Vector2 position, TileData datas, int index) {
+    private TileView AddSingleTile(Vector2 position, TileData datas) {
         GameObject go = Instantiate(_tilePrefab, _rectTransform);
         TileView tile = go.GetComponent<TileView>();
 
         go.AnimateRectTransform();
         go.transform.localPosition = position;
 
-        tile.Init(datas, index, this);
+        tile.Init(datas, this);
 
         return tile;
     }

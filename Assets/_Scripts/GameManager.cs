@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour {
             await Task.Delay(1000);
         }
 
-        ConnectionManager.SendMessage(MessageType.UpdateGamePhase, GamePhase.VotingForDestination);
+        ConnectionManager.SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.VotingForDestination);
 
         await Task.Delay(1000);
 

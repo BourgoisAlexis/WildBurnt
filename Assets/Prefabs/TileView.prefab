@@ -407,11 +407,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12e112ab6fb0b3e44841d09bd2a80408, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _icon: {fileID: 5259435817617359293}
   _spots:
   - {fileID: 7706515974721595957}
   - {fileID: 488044765995384649}
   - {fileID: 1277593387509131999}
   - {fileID: 3767352283783150223}
+  _icons:
+  - {fileID: 21300000, guid: 9fff373dcee826f4880f1c41a8e14b8d, type: 3}
+  - {fileID: 21300000, guid: e415a28d9de0ed045976fd2ad5d49f70, type: 3}
+  - {fileID: 21300000, guid: f1e2e5c9da85bb34eb5fccc9422aa5e7, type: 3}
+  - {fileID: 21300000, guid: c27e6c4270dcdb643bcde0b221883bad, type: 3}
+  - {fileID: 21300000, guid: e08a1144986392d4daed8e03c78baa83, type: 3}
 --- !u!1 &7706515974721595957
 GameObject:
   m_ObjectHideFlags: 0

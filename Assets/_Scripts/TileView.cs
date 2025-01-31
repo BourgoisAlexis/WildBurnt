@@ -4,17 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class TileView : MonoBehaviour {
+    [SerializeField] private Image _icon;
     [SerializeField] private List<GameObject> _spots;
+    [SerializeField] private Sprite[] _icons;
 
     private TileData _tileData;
-    private int _index;
     private ViewMap _viewMap;
 
 
-    public void Init(TileData tileData, int index, ViewMap viewMap) {
+    public void Init(TileData tileData, ViewMap viewMap) {
         _tileData = tileData;
-        _index = index;
         _viewMap = viewMap;
+        _icon.sprite = _icons[(int)tileData.TileType];
 
         foreach (GameObject spot in _spots)
             spot.transform.localScale = Vector3.zero;
@@ -30,11 +31,11 @@ public class TileView : MonoBehaviour {
     public void DisplayVotes(List<int> indexes) {
         for (int i = 0; i < indexes.Count; i++) {
             _spots[i].GetComponent<Image>().color = GameUtilsAndConsts.ColorFromPlayerID(i);
-            _spots[i].transform.DOScale(Vector3.one * (indexes[i] == _index ? 1 : 0), GameUtilsAndConsts.ANIM_DURATION);
+            _spots[i].transform.DOScale(Vector3.one * (indexes[i] == _tileData.Index ? 1 : 0), GameUtilsAndConsts.ANIM_DURATION);
         }
     }
 
     private void OnClick() {
-        _viewMap.ClickOnTile(_index);
+        _viewMap.ClickOnTile(_tileData.Index);
     }
 }

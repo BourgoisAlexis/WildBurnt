@@ -32,11 +32,12 @@ public static class GameUtilsAndConsts {
     }
 
     public static TileData[] CreateTileRow() {
-        int size = Random.Range(1, 5);
-        TileData[] result = new TileData[size];
+        int randomSize = System.Enum.GetNames(typeof(TileType)).Length;
+        int rowSize = Random.Range(1, 5);
+        TileData[] result = new TileData[rowSize];
 
-        for (int i = 0; i < size; i++)
-            result[i] = new TileData(Random.Range(0, 5));
+        for (int i = 0; i < rowSize; i++)
+            result[i] = new TileData((TileType)Random.Range(1, randomSize), i);
 
         return result;
     }

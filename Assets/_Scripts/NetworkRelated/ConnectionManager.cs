@@ -15,9 +15,10 @@ public class ConnectionManager : SubManager {
 
     private SimpleTCPConnection<PeerMessageWildBurnt> _connection;
     private Queue<PeerMessageWildBurnt> _messageQueue;
-    private float _delay;
 
+    private bool _sendingMessage = false;
     private bool _askingForID;
+
     private int _guestID;
 
     private GameModel _gameModel => _manager.GameModel;
@@ -35,26 +36,7 @@ public class ConnectionManager : SubManager {
     }
 
     private void Update() {
-        if (_delay > 0) {
-            _delay -= Time.deltaTime;
-            return;
-        }
-
-        if (_messageQueue.Count > 0) {
-            PeerMessageWildBurnt m = _messageQueue.Dequeue();
-
-            _connection.SendMessage(m);
-
-            _delay = GameUtilsAndConsts.MESSAGE_DELAY;
-
-            if (_logSentMessages)
-                Debug.Log($"{(_host ? "Host" : "Guest")} sent a message : {m.ToString()}");
-
-            if (GameUtilsAndConsts.DONT_SEND_TO_SELF.Contains(m.MessageType))
-                return;
-
-            ReceivedMessage(m);
-        }
+        UpdateMessageQueue();
     }
 
 
@@ -123,8 +105,8 @@ public class ConnectionManager : SubManager {
 
             //Game
             case MessageType.UpdateGamePhase:
-                Enum.TryParse(message.Message, out GamePhase phase);
-                _gameModel.UpdateGamePhase(phase);
+                i = int.Parse(message.Message);
+                _gameModel.UpdateGamePhase((GamePhase)i);
                 _gameView.ShowMessage($"Phase : {_gameModel.GamePhase}");
                 break;
 
@@ -176,5 +158,29 @@ public class ConnectionManager : SubManager {
     public void SendMessage(MessageType messageType, string content = "Empty") {
         PeerMessageWildBurnt m = new PeerMessageWildBurnt(_guestID, messageType, content);
         _messageQueue.Enqueue(m);
+    }
+
+    private async void UpdateMessageQueue() {
+        if (_sendingMessage == true)
+            return;
+
+        if (_messageQueue.Count > 0) {
+            _sendingMessage = true;
+
+            PeerMessageWildBurnt m = _messageQueue.Dequeue();
+
+            await _connection.SendMessageTask(m);
+
+            if (_logSentMessages)
+                Debug.Log($"{(_host ? "Host" : "Guest")} sent a message : {m.ToString()}");
+
+            _sendingMessage = false;
+
+            if (GameUtilsAndConsts.DONT_SEND_TO_SELF.Contains(m.MessageType))
+                return;
+
+            ReceivedMessage(m);
+        }
+
     }
 }
