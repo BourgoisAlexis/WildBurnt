@@ -2,7 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ViewMap : UIView {
+public class ViewMap : ViewWildBurntBasic {
     #region Variables
     [SerializeField] private RectTransform _top;
     [SerializeField] private RectTransform _bot;
@@ -10,7 +10,6 @@ public class ViewMap : UIView {
     [SerializeField] private GameObject _tilePrefab;
 
     private List<TileView[]> _tileRows;
-    private GameView _gameView;
 
     private int _currentRowIndex => _tileRows.Count - GameUtilsAndConsts.SHOWING_ROWS;
     private int _nextRowIndex => _currentRowIndex + 1;
@@ -20,11 +19,6 @@ public class ViewMap : UIView {
     protected override void Awake() {
         _tileRows = new List<TileView[]>();
         base.Awake();
-    }
-
-    public override void Init(params object[] parameters) {
-        _gameView = parameters[0] as GameView;
-        base.Init(parameters);
     }
 
 
@@ -88,8 +82,10 @@ public class ViewMap : UIView {
             tile.DisplayVotes(votes);
     }
 
-
-
+    public void DisplaySelectedTile(VoteResult result) {
+        TileView[] tiles = _tileRows[_nextRowIndex];
+        tiles[result.Index].Highlight(true);
+    }
 
 
     //Actions

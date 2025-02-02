@@ -5,7 +5,7 @@ public enum GamePhase {
 
     VotingForDestination,
 
-    Looting,
+    VotingForLoot,
     Fighting,
     Waiting,
 }

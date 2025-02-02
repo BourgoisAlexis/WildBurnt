@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -56,6 +54,13 @@ public class GameManager : MonoBehaviour {
         if (GameModel.GamePhase == GamePhase.VotingForDestination) {
             if (messageType == MessageType.VoteEnd) {
                 ConnectionManager.SendMessage(MessageType.MoveToDestination, JsonUtility.ToJson(GameModel.GetVoteResult()));
+            }
+            else if (messageType == MessageType.Ready) {
+                foreach (bool b in GameModel.Readys)
+                    if (b == false)
+                        return;
+
+                ConnectionManager.SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.VotingForLoot);
             }
         }
     }

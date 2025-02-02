@@ -3,10 +3,12 @@ using System;
 [Serializable]
 public struct VoteResult {
     public bool Randomized;
-    public int Result;
+    public int Index;
+    public int Value;
 
-    public VoteResult(bool randomized, int result) {
+    public VoteResult(bool randomized, int index, int value) {
         Randomized = randomized;
-        Result = result;
+        Index = index;
+        Value = value;
     }
 }

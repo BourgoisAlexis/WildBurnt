@@ -17,6 +17,7 @@ public struct PlayerModel {
 public class GameModel {
     public List<PlayerModel> PlayerModels { get; private set; }
     public List<int> CurrentVote { get; private set; }
+    public List<bool> Readys { get; private set; }
     public GamePhase GamePhase { get; private set; }
     public List<TileData[]> TileRows { get; private set; }
 
@@ -24,6 +25,7 @@ public class GameModel {
     public GameModel() {
         PlayerModels = new List<PlayerModel>();
         CurrentVote = new List<int>();
+        Readys = new List<bool>();
         GamePhase = new GamePhase();
         TileRows = new List<TileData[]>();
     }
@@ -32,16 +34,18 @@ public class GameModel {
     public int CreatePlayer() {
         PlayerModels.Add(new PlayerModel(PlayerModels.Count));
         CurrentVote.Add(GameUtilsAndConsts.EMPTY_VOTE);
+        Readys.Add(false);
         return PlayerModels.Count - 1;
     }
 
-    public List<int> UpdateVote(int playerID, int value) {
+    public void UpdateVote(int playerID, int value, out List<int> result) {
         CurrentVote[playerID] = value;
-        return CurrentVote;
+        result = CurrentVote;
     }
 
     public VoteResult GetVoteResult() {
-        VoteResult result = new VoteResult(false, GameUtilsAndConsts.EMPTY_VOTE);
+        VoteResult result = new VoteResult(false, GameUtilsAndConsts.EMPTY_VOTE, 0);
+        TileData[] row = TileRows.Last();
 
         int maxCount = CurrentVote.GroupBy(n => n).Max(g => g.Count());
         List<int> voteResults = CurrentVote.GroupBy(n => n).Where(g => g.Count() == maxCount).Select(g => g.Key).ToList();
@@ -49,14 +53,17 @@ public class GameModel {
 
         if (voteResults.Count > 1) {
             voteResults.Shuffle();
-            result = new VoteResult(true, voteResults.First());
+            int index = voteResults.First();
+            result = new VoteResult(true, index, (int)row[index].TileType);
         }
         else if (voteResults.Count <= 0) {
-            int n = UnityEngine.Random.Range(0, TileRows.Last().Length);
-            result = new VoteResult(true, n);
+            int length = TileRows.Last().Length;
+            int r = length > 1 ? UnityEngine.Random.Range(0, length) : 0;
+            result = new VoteResult(length > 1, r, (int)row[r].TileType);
         }
         else {
-            result = new VoteResult(false, voteResults.First());
+            int index = voteResults.First();
+            result = new VoteResult(false, index, (int)row[index].TileType);
         }
 
         return result;
@@ -66,6 +73,13 @@ public class GameModel {
         for (int i = 0; i < CurrentVote.Count; i++)
             CurrentVote[i] = GameUtilsAndConsts.EMPTY_VOTE;
     }
+
+
+    public void UpdateReady(int playerID, bool value, out List<bool> result) {
+        Readys[playerID] = value;
+        result = Readys;
+    }
+
 
     public void AddTileRow(TileData[] tileDatas) {
         TileRows.Add(tileDatas);

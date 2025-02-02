@@ -33,7 +33,7 @@ public static class GameUtilsAndConsts {
 
     public static TileData[] CreateTileRow() {
         int randomSize = System.Enum.GetNames(typeof(TileType)).Length;
-        int rowSize = 4;//Random.Range(1, 5);
+        int rowSize = Random.Range(1, 5);
         TileData[] result = new TileData[rowSize];
 
         for (int i = 0; i < rowSize; i++)

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class CoinView : MonoBehaviour {
@@ -21,7 +22,7 @@ public class CoinView : MonoBehaviour {
         _faces[1].SetActive(_offSet % 2 != 0);
     }
 
-    public async void Flip() {
+    public async Task Flip() {
         await _rectTransform.DOLocalMoveY(_startHeight, _duration).SetEase(_initEase).AsyncWaitForCompletion();
         SecondaryAnim(_duration * 1.3f);
         await _rectTransform.DOLocalMoveY(_height, _duration).SetEase(_inEase).AsyncWaitForCompletion();

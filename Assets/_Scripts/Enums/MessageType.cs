@@ -7,6 +7,7 @@ public enum MessageType {
 
     //Game
     UpdateGamePhase,
+    Ready,
 
     //Vote
     Vote,

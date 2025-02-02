@@ -81,6 +81,7 @@ public class ConnectionManager : SubManager {
 
         int i = GameUtilsAndConsts.EMPTY_VOTE;
         string s = GameUtilsAndConsts.EMPTY_MESSAGE;
+        bool b = false;
 
         switch (message.MessageType) {
             //Connection
@@ -110,11 +111,16 @@ public class ConnectionManager : SubManager {
                 _gameView.ShowMessage($"Phase : {_gameModel.GamePhase}");
                 break;
 
+            case MessageType.Ready:
+                b = bool.Parse(message.Message);
+                _gameModel.UpdateReady(message.SenderID, b, out List<bool> readys);
+                break;
+
 
             //Vote
             case MessageType.Vote:
                 i = int.Parse(message.Message);
-                List<int> votes = _gameModel.UpdateVote(message.SenderID, i);
+                _gameModel.UpdateVote(message.SenderID, i, out List<int> votes);
                 _gameView.DisplayVotes(votes);
                 break;
 
