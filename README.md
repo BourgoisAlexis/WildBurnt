@@ -18,9 +18,9 @@ One client will be the host of the game and the second one will be a guest.
 
 ### Basic map interface
 I choose to prototype it mostly with UI elements, since it makes it easier to scale with screen size and make it interactable with basic actions like click, drag, etc...
-I ended up with a basic map layout where i spawn some randomly generated tiles.
-*Images comming soonish*
+I ended up with a basic map layout where i spawn some randomly generated tiles.</br>
+*Images coming soonish*
 
 ### Vote system
-Every time the players land on the map screen, they can vote for the next tile to explore.
-*Images comming soonish*
+Every time the players land on the map screen, they can vote for the next tile to explore.</br>
+*Images coming soonish*
