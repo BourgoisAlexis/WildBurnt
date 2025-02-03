@@ -10,15 +10,15 @@ public class TileView : UIButtonAbstract<UnityEvent<int>> {
     [SerializeField] Image _highlight;
     [SerializeField] private List<GameObject> _voteSpots;
 
-    private TileData _tileData;
+    private TileModel _model;
     private ViewMap _viewMap;
     #endregion
 
 
-    public void Init(TileData tileData, ViewMap viewMap) {
-        _tileData = tileData;
+    public void Init(TileModel tileModel, ViewMap viewMap) {
+        _model = tileModel;
         _viewMap = viewMap;
-        _icon.sprite = DataLoader.Instance.LoadTileSprite((int)tileData.TileType);
+        _icon.sprite = DataLoader.Instance.LoadTileSprite((int)tileModel.TileType);
 
         Highlight(false);
 
@@ -29,7 +29,7 @@ public class TileView : UIButtonAbstract<UnityEvent<int>> {
     public void DisplayVotes(List<int> indexes) {
         for (int i = 0; i < indexes.Count; i++) {
             _voteSpots[i].GetComponent<Image>().color = GameUtilsAndConsts.ColorFromPlayerID(i);
-            _voteSpots[i].transform.DOScale(Vector3.one * (indexes[i] == _tileData.Index ? 1 : 0), GameUtilsAndConsts.ANIM_DURATION);
+            _voteSpots[i].transform.DOScale(Vector3.one * (indexes[i] == _model.Index ? 1 : 0), GameUtilsAndConsts.ANIM_DURATION);
         }
     }
 
@@ -39,6 +39,6 @@ public class TileView : UIButtonAbstract<UnityEvent<int>> {
     }
 
     public override void OnPointerClick(PointerEventData eventData) {
-        _viewMap.ClickOnTile(_tileData.Index);
+        _viewMap.ClickOnTile(_model.Index);
     }
 }

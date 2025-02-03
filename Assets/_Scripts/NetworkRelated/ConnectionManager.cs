@@ -8,6 +8,7 @@ using System.Linq;
 
 public class ConnectionManager : SubManager {
     #region Variables
+    [Header("DEBUG")]
     [SerializeField] private bool _logSentMessages;
     [SerializeField] private bool _logReceivedMessages;
     [SerializeField] private ConnectionManager _guest;
@@ -105,9 +106,9 @@ public class ConnectionManager : SubManager {
 
 
             //Game
-            case MessageType.UpdateGamePhase:
+            case MessageType.SetGamePhase:
                 i = int.Parse(message.Message);
-                _gameModel.UpdateGamePhase((GamePhase)i);
+                _gameModel.SetGamePhase((GamePhase)i);
                 _gameView.ShowMessage($"Phase : {_gameModel.GamePhase}");
                 break;
 
@@ -146,10 +147,10 @@ public class ConnectionManager : SubManager {
                 break;
 
             case MessageType.AddTileRow:
-                TileData[] tileDatas = JsonUtility.FromJson<JSONableArray<TileData>>(message.Message).Array;
-                _gameModel.AddTileRow(tileDatas);
-                _gameView.AddTileRow(tileDatas);
-                //Pour du debug uniquement
+                TileModel[] tileModels = JsonUtility.FromJson<JSONableArray<TileModel>>(message.Message).Array;
+                _gameModel.AddTileRow(tileModels);
+                _gameView.AddTileRow(tileModels);
+                //Debug only
                 if (_gameModel.TileRows.Count >= GameUtilsAndConsts.SHOWING_ROWS)
                     VoteCountDown();
                 break;
@@ -161,7 +162,7 @@ public class ConnectionManager : SubManager {
 
             //Loot
             case MessageType.AddLoots:
-                TileData[] lootDatas = JsonUtility.FromJson<JSONableArray<TileData>>(message.Message).Array;
+                TileModel[] lootDatas = JsonUtility.FromJson<JSONableArray<TileModel>>(message.Message).Array;
                 //_gameModel.AddTileRow(datas);
                 _gameView.AddLoots(lootDatas);
                 VoteCountDown();
@@ -213,15 +214,15 @@ public class ConnectionManager : SubManager {
 
     private void OnViewLoaded() {
         if (_gameModel.GamePhase == GamePhase.Map) {
-            TileData[] datas = GameUtilsAndConsts.CreateTileRow();
-            string json = JsonUtility.ToJson(new JSONableArray<TileData>(datas));
+            TileModel[] tileModels = GameUtilsAndConsts.CreateTileRow();
+            string json = JsonUtility.ToJson(new JSONableArray<TileModel>(tileModels));
             SendMessage(MessageType.AddTileRow, json);
         }
         else if (_gameModel.GamePhase == GamePhase.Tile) {
-            TileData tileData = _gameModel.GetCurrentTile();
-            if (tileData.TileType == TileType.Loot) {
-                TileData[] datas = GameUtilsAndConsts.CreateTileRow();
-                string json = JsonUtility.ToJson(new JSONableArray<TileData>(datas));
+            TileModel tileModel = _gameModel.GetCurrentTile();
+            if (tileModel.TileType == TileType.Loot) {
+                TileModel[] row = GameUtilsAndConsts.CreateTileRow();
+                string json = JsonUtility.ToJson(new JSONableArray<TileModel>(row));
                 SendMessage(MessageType.AddLoots, json);
             }
         }
@@ -231,11 +232,11 @@ public class ConnectionManager : SubManager {
 
     private void OnVoteEnd() {
         if (_gameModel.GamePhase == GamePhase.Map) {
-            SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.Tile);
+            SendMessage(MessageType.SetGamePhase, (int)GamePhase.Tile);
             SendMessage(MessageType.MoveToTile, JsonUtility.ToJson(_gameModel.GetVoteResult()));
         }
         else if (_gameModel.GamePhase == GamePhase.Tile) {
-            SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.Map);
+            SendMessage(MessageType.SetGamePhase, (int)GamePhase.Map);
             SendMessage(MessageType.BackToMap, "Test");
         }
 

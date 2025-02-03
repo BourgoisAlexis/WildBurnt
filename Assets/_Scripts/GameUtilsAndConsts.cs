@@ -31,13 +31,13 @@ public static class GameUtilsAndConsts {
         return Color.magenta;
     }
 
-    public static TileData[] CreateTileRow() {
+    public static TileModel[] CreateTileRow() {
         int randomSize = System.Enum.GetNames(typeof(TileType)).Length;
         int rowSize = Random.Range(1, 5);
-        TileData[] result = new TileData[rowSize];
+        TileModel[] result = new TileModel[rowSize];
 
         for (int i = 0; i < rowSize; i++)
-            result[i] = new TileData(TileType.Loot, i);
+            result[i] = new TileModel(TileType.Loot, i);
             //result[i] = new TileData((TileType)Random.Range(1, randomSize), i);
 
         return result;

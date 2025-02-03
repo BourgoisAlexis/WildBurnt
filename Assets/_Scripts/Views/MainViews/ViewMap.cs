@@ -22,8 +22,8 @@ public class ViewMap : ViewWildBurntBasic {
     }
 
 
-    public void AddTileRow(TileData[] tileDatas) {
-        int size = tileDatas.Length;
+    public void AddTileRow(TileModel[] tileModels) {
+        int size = tileModels.Length;
         TileView[] row = new TileView[size];
 
         Vector2 midSize = _rectTransform.rect.size;
@@ -34,10 +34,10 @@ public class ViewMap : ViewWildBurntBasic {
         float stepH = midSize.x / (float)(size + 1);
         float offsetH = midSize.x / 2 - stepH;
 
-        foreach (TileData tileData in tileDatas) {
-            int index = tileData.Index;
+        foreach (TileModel tileModel in tileModels) {
+            int index = tileModel.Index;
             Vector2 pos = new Vector2(index * stepH - offsetH, 0);
-            row[index] = AddSingleTile(pos, tileDatas[index]);
+            row[index] = AddSingleTile(pos, tileModels[index]);
         }
 
         _tileRows.Add(row);
@@ -64,14 +64,14 @@ public class ViewMap : ViewWildBurntBasic {
         }
     }
 
-    private TileView AddSingleTile(Vector2 position, TileData datas) {
+    private TileView AddSingleTile(Vector2 position, TileModel tileModel) {
         GameObject go = Instantiate(_prefab, _rectTransform);
         TileView tile = go.GetComponent<TileView>();
 
         go.AnimateRectTransform();
         go.transform.localPosition = position;
 
-        tile.Init(datas, this);
+        tile.Init(tileModel, this);
 
         return tile;
     }

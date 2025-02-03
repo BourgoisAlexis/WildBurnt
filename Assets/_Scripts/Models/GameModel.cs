@@ -10,7 +10,7 @@ public class GameModel {
     public List<int> CurrentVote { get; private set; }
     public List<bool> Readys { get; private set; }
     //Map
-    public List<TileData[]> TileRows { get; private set; }
+    public List<TileModel[]> TileRows { get; private set; }
     public int CurrentTileIndex { get; private set; }
     #endregion
 
@@ -20,7 +20,8 @@ public class GameModel {
         CurrentVote = new List<int>();
         Readys = new List<bool>();
         GamePhase = new GamePhase();
-        TileRows = new List<TileData[]>();
+        TileRows = new List<TileModel[]>();
+        CurrentTileIndex = 0;
     }
 
 
@@ -38,7 +39,7 @@ public class GameModel {
 
     public VoteResult GetVoteResult() {
         VoteResult result = new VoteResult(false, GameUtilsAndConsts.EMPTY_VOTE, 0);
-        TileData[] row = TileRows.Last();
+        TileModel[] row = TileRows.Last();
 
         int maxCount = CurrentVote.GroupBy(n => n).Max(g => g.Count());
         List<int> voteResults = CurrentVote.GroupBy(n => n).Where(g => g.Count() == maxCount).Select(g => g.Key).ToList();
@@ -79,15 +80,15 @@ public class GameModel {
     }
 
 
-    public void AddTileRow(TileData[] tileDatas) {
+    public void AddTileRow(TileModel[] tileDatas) {
         TileRows.Add(tileDatas);
 
         StringBuilder sb = new StringBuilder();
-        foreach (TileData[] row in TileRows) {
+        foreach (TileModel[] row in TileRows) {
             string s = string.Empty;
             for (int i = 0; i < row.Length; i++) {
-                TileData tileData = row[i];
-                s += tileData.TileType;
+                TileModel tileModel = row[i];
+                s += tileModel.TileType;
                 if (i < row.Length - 1)
                     s += "-";
             }
@@ -102,12 +103,12 @@ public class GameModel {
         CurrentTileIndex = result.Index;
     }
 
-    public void UpdateGamePhase(GamePhase gamePhase) {
+    public void SetGamePhase(GamePhase gamePhase) {
         GamePhase = gamePhase;
     }
 
 
-    public TileData GetCurrentTile() {
+    public TileModel GetCurrentTile() {
         return TileRows.Last()[CurrentTileIndex];
     }
 }

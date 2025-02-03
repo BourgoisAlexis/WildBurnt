@@ -20,11 +20,11 @@ public class GameManager : MonoBehaviour {
 
 
     public async void Init() {
-        ConnectionManager.SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.Map);
+        ConnectionManager.SendMessage(MessageType.SetGamePhase, (int)GamePhase.Map);
 
         for (int i = 0; i < GameUtilsAndConsts.SHOWING_ROWS; i++) {
-            TileData[] datas = GameUtilsAndConsts.CreateTileRow();
-            string json = JsonUtility.ToJson(new JSONableArray<TileData>(datas));
+            TileModel[] tileModels = GameUtilsAndConsts.CreateTileRow();
+            string json = JsonUtility.ToJson(new JSONableArray<TileModel>(tileModels));
             ConnectionManager.SendMessage(MessageType.AddTileRow, json);
 
             await Task.Delay(1000);

@@ -7,7 +7,7 @@ public class GameView : SubManager {
     #region Variables
     [SerializeField] private TextMeshProUGUI _tmproMessage;
 
-    [Header("UIViews")]
+    [Header("MainViews")]
     [SerializeField] private UIViewManager _viewManager;
     [SerializeField] private ViewMap _viewMap;
     [SerializeField] private ViewLoot _viewLoot;
@@ -38,8 +38,8 @@ public class GameView : SubManager {
 
 
     //Map
-    public void AddTileRow(TileData[] tileDatas) {
-        _viewMap.AddTileRow(tileDatas);
+    public void AddTileRow(TileModel[] tileModels) {
+        _viewMap.AddTileRow(tileModels);
     }
 
     public async void MoveToTile(VoteResult result) {
@@ -72,7 +72,7 @@ public class GameView : SubManager {
 
 
     //Loot
-    public void AddLoots(TileData[] lootDatas) {
+    public void AddLoots(TileModel[] lootDatas) {
         _viewLoot.AddLoots(lootDatas);
     }
 
