@@ -7,7 +7,7 @@ public class ViewMap : ViewWildBurntBasic {
     [SerializeField] private RectTransform _top;
     [SerializeField] private RectTransform _bot;
 
-    [SerializeField] private GameObject _tilePrefab;
+    [SerializeField] private GameObject _prefab;
 
     private List<TileView[]> _tileRows;
 
@@ -65,7 +65,7 @@ public class ViewMap : ViewWildBurntBasic {
     }
 
     private TileView AddSingleTile(Vector2 position, TileData datas) {
-        GameObject go = Instantiate(_tilePrefab, _rectTransform);
+        GameObject go = Instantiate(_prefab, _rectTransform);
         TileView tile = go.GetComponent<TileView>();
 
         go.AnimateRectTransform();

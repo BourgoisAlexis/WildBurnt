@@ -113,14 +113,16 @@ public class ConnectionManager : SubManager {
 
             case MessageType.Ready:
                 b = bool.Parse(message.Message);
-                _gameModel.UpdateReady(message.SenderID, b, out List<bool> readys);
+                _gameModel.UpdateReadys(message.SenderID, b, out bool ready);
+                if (ready && _host)
+                    OnViewLoaded();
                 break;
 
 
             //Vote
             case MessageType.Vote:
                 i = int.Parse(message.Message);
-                _gameModel.UpdateVote(message.SenderID, i, out List<int> votes);
+                _gameModel.UpdateVotes(message.SenderID, i, out List<int> votes);
                 _gameView.DisplayVotes(votes);
                 break;
 
@@ -131,19 +133,38 @@ public class ConnectionManager : SubManager {
 
             case MessageType.VoteEnd:
                 _gameView.ShowMessage($"Vote Ended");
+                if (_host)
+                    OnVoteEnd();
                 break;
 
 
             //Map
-            case MessageType.MoveToDestination:
+            case MessageType.MoveToTile:
                 VoteResult result = JsonUtility.FromJson<VoteResult>(message.Message);
-                _gameView.MoveToDestination(result);
+                _gameModel.MoveToTile(result);
+                _gameView.MoveToTile(result);
                 break;
 
             case MessageType.AddTileRow:
-                TileData[] datas = JsonUtility.FromJson<JSONableArray<TileData>>(message.Message).Array;
-                _gameModel.AddTileRow(datas);
-                _gameView.AddTileRow(_gameModel.TileRows.Last());
+                TileData[] tileDatas = JsonUtility.FromJson<JSONableArray<TileData>>(message.Message).Array;
+                _gameModel.AddTileRow(tileDatas);
+                _gameView.AddTileRow(tileDatas);
+                //Pour du debug uniquement
+                if (_gameModel.TileRows.Count >= GameUtilsAndConsts.SHOWING_ROWS)
+                    VoteCountDown();
+                break;
+
+            case MessageType.BackToMap:
+                _gameView.BackToMap();
+                break;
+
+
+            //Loot
+            case MessageType.AddLoots:
+                TileData[] lootDatas = JsonUtility.FromJson<JSONableArray<TileData>>(message.Message).Array;
+                //_gameModel.AddTileRow(datas);
+                _gameView.AddLoots(lootDatas);
+                VoteCountDown();
                 break;
 
 
@@ -151,9 +172,6 @@ public class ConnectionManager : SubManager {
             case MessageType.Default:
                 break;
         }
-
-        if (_host)
-            _manager.CheckForGamePhase(message.MessageType);
     }
 
 
@@ -167,6 +185,9 @@ public class ConnectionManager : SubManager {
     }
 
     private async void UpdateMessageQueue() {
+        if (Application.isPlaying == false)
+            return;
+
         if (_sendingMessage == true)
             return;
 
@@ -187,6 +208,47 @@ public class ConnectionManager : SubManager {
 
             ReceivedMessage(m);
         }
+    }
 
+
+    private void OnViewLoaded() {
+        if (_gameModel.GamePhase == GamePhase.Map) {
+            TileData[] datas = GameUtilsAndConsts.CreateTileRow();
+            string json = JsonUtility.ToJson(new JSONableArray<TileData>(datas));
+            SendMessage(MessageType.AddTileRow, json);
+        }
+        else if (_gameModel.GamePhase == GamePhase.Tile) {
+            TileData tileData = _gameModel.GetCurrentTile();
+            if (tileData.TileType == TileType.Loot) {
+                TileData[] datas = GameUtilsAndConsts.CreateTileRow();
+                string json = JsonUtility.ToJson(new JSONableArray<TileData>(datas));
+                SendMessage(MessageType.AddLoots, json);
+            }
+        }
+
+        _gameModel.ClearReadys();
+    }
+
+    private void OnVoteEnd() {
+        if (_gameModel.GamePhase == GamePhase.Map) {
+            SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.Tile);
+            SendMessage(MessageType.MoveToTile, JsonUtility.ToJson(_gameModel.GetVoteResult()));
+        }
+        else if (_gameModel.GamePhase == GamePhase.Tile) {
+            SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.Map);
+            SendMessage(MessageType.BackToMap, "Test");
+        }
+
+        _gameModel.ClearVotes();
+    }
+
+    private void VoteCountDown() {
+        if (_host) {
+            _manager.StartCountDown(5, (int v) => {
+                SendMessage(MessageType.VoteTimer, v);
+            }, () => {
+                SendMessage(MessageType.VoteEnd);
+            });
+        }
     }
 }

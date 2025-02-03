@@ -3,9 +3,7 @@ public enum GamePhase {
 
     Lobby,
 
-    VotingForDestination,
+    Map,
 
-    VotingForLoot,
-    Fighting,
-    Waiting,
+    Tile,
 }

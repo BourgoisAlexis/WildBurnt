@@ -1,20 +1,24 @@
 public enum MessageType {
-    Default,
+    Default = 0,
 
     //Connection
-    AskForID,
-    GiveID,
+    AskForID = 1,
+    GiveID = 2,
 
     //Game
-    UpdateGamePhase,
-    Ready,
+    UpdateGamePhase = 3,
+    Ready = 4,
 
     //Vote
-    Vote,
-    VoteTimer,
-    VoteEnd,
+    Vote = 5,
+    VoteTimer = 6,
+    VoteEnd = 7,
 
     //Map
-    MoveToDestination,
-    AddTileRow,
+    MoveToTile = 8,
+    AddTileRow = 9,
+    BackToMap = 10,
+
+    //Loot
+    AddLoots = 11,
 }

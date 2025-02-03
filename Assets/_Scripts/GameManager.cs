@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour {
 
 
     public async void Init() {
+        ConnectionManager.SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.Map);
+
         for (int i = 0; i < GameUtilsAndConsts.SHOWING_ROWS; i++) {
             TileData[] datas = GameUtilsAndConsts.CreateTileRow();
             string json = JsonUtility.ToJson(new JSONableArray<TileData>(datas));
@@ -27,19 +29,9 @@ public class GameManager : MonoBehaviour {
 
             await Task.Delay(1000);
         }
-
-        ConnectionManager.SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.VotingForDestination);
-
-        await Task.Delay(1000);
-
-        StartCountDown(5, (int v) => {
-            ConnectionManager.SendMessage(MessageType.VoteTimer, v);
-        }, () => {
-            ConnectionManager.SendMessage(MessageType.VoteEnd);
-        });
     }
 
-    private async void StartCountDown(int duration, Action<int> onTick, Action onEnd) {
+    public async void StartCountDown(int duration, Action<int> onTick, Action onEnd) {
         int value = duration;
 
         for (int i = 0; i < duration; i++) {
@@ -48,20 +40,5 @@ public class GameManager : MonoBehaviour {
         }
 
         onEnd?.Invoke();
-    }
-
-    public void CheckForGamePhase(MessageType messageType) {
-        if (GameModel.GamePhase == GamePhase.VotingForDestination) {
-            if (messageType == MessageType.VoteEnd) {
-                ConnectionManager.SendMessage(MessageType.MoveToDestination, JsonUtility.ToJson(GameModel.GetVoteResult()));
-            }
-            else if (messageType == MessageType.Ready) {
-                foreach (bool b in GameModel.Readys)
-                    if (b == false)
-                        return;
-
-                ConnectionManager.SendMessage(MessageType.UpdateGamePhase, (int)GamePhase.VotingForLoot);
-            }
-        }
     }
 }

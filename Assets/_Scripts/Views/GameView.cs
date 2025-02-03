@@ -10,11 +10,13 @@ public class GameView : SubManager {
     [Header("UIViews")]
     [SerializeField] private UIViewManager _viewManager;
     [SerializeField] private ViewMap _viewMap;
+    [SerializeField] private ViewLoot _viewLoot;
     [Header("SubViews")]
     [SerializeField] private CoinView _coinView;
     [SerializeField] private TransitionView _transitionView;
 
     private ConnectionManager _connectionManager => _manager.ConnectionManager;
+    private GameModel _gameModel => _manager.GameModel;
     #endregion
 
 
@@ -34,15 +36,13 @@ public class GameView : SubManager {
         }
     }
 
+
+    //Map
     public void AddTileRow(TileData[] tileDatas) {
         _viewMap.AddTileRow(tileDatas);
     }
 
-    public void DisplayVotes(List<int> votes) {
-        _viewMap.DisplayVotes(votes);
-    }
-
-    public async void MoveToDestination(VoteResult result) {
+    public async void MoveToTile(VoteResult result) {
         int delay = 1000;
 
         if (result.Randomized) {
@@ -56,17 +56,38 @@ public class GameView : SubManager {
         await Task.Delay(delay);
         _transitionView.gameObject.SetActive(true);
         await _transitionView.Transition(true, result);
-        _viewManager.ShowView(1, false, this);
+        _viewManager.ShowView(result.Value, false, this);
         await _transitionView.Transition(false, result);
         _transitionView.gameObject.SetActive(false);
     }
 
     public void ClickOnTile(int index) {
-        if (_manager.GameModel.GamePhase == GamePhase.VotingForDestination)
+        if (_gameModel.GamePhase == GamePhase.Map)
             _connectionManager.SendMessage(MessageType.Vote, index);
     }
 
-    public void ViewLodaded() {
+    public void BackToMap() {
+        _viewManager.ShowView(0, false, this);
+    }
+
+
+    //Loot
+    public void AddLoots(TileData[] lootDatas) {
+        _viewLoot.AddLoots(lootDatas);
+    }
+
+    public void ClickOnItem(int index) {
+        if (_gameModel.GamePhase == GamePhase.Tile && _gameModel.GetCurrentTile().TileType == TileType.Loot)
+            _connectionManager.SendMessage(MessageType.Vote, index);
+    }
+
+
+    //Views
+    public void DisplayVotes(List<int> votes) {
+        _viewMap.DisplayVotes(votes);
+    }
+
+    public void ViewLoaded() {
         _connectionManager.SendMessage(MessageType.Ready, true);
     }
 }

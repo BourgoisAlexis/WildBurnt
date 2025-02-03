@@ -10,6 +10,6 @@ public class ViewWildBurntBasic : UIView {
 
     public override async Task Show(bool instant, params object[] parameters) {
         await base.Show(instant, parameters);
-        _gameView.ViewLodaded();
+        _gameView.ViewLoaded();
     }
 }

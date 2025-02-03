@@ -37,7 +37,8 @@ public static class GameUtilsAndConsts {
         TileData[] result = new TileData[rowSize];
 
         for (int i = 0; i < rowSize; i++)
-            result[i] = new TileData((TileType)Random.Range(1, randomSize), i);
+            result[i] = new TileData(TileType.Loot, i);
+            //result[i] = new TileData((TileType)Random.Range(1, randomSize), i);
 
         return result;
     }

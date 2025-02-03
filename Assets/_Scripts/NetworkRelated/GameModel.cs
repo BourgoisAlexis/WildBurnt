@@ -1,25 +1,18 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public struct PlayerModel {
-    public int ID;
-    public string UserName;
-
-    public PlayerModel(int id) {
-        ID = id;
-        UserName = $"Player_{id}";
-    }
-}
-
-
 public class GameModel {
+    #region Variables
+    public GamePhase GamePhase { get; private set; }
+    //Players
     public List<PlayerModel> PlayerModels { get; private set; }
     public List<int> CurrentVote { get; private set; }
     public List<bool> Readys { get; private set; }
-    public GamePhase GamePhase { get; private set; }
+    //Map
     public List<TileData[]> TileRows { get; private set; }
+    public int CurrentTileIndex { get; private set; }
+    #endregion
 
 
     public GameModel() {
@@ -38,7 +31,7 @@ public class GameModel {
         return PlayerModels.Count - 1;
     }
 
-    public void UpdateVote(int playerID, int value, out List<int> result) {
+    public void UpdateVotes(int playerID, int value, out List<int> result) {
         CurrentVote[playerID] = value;
         result = CurrentVote;
     }
@@ -75,9 +68,14 @@ public class GameModel {
     }
 
 
-    public void UpdateReady(int playerID, bool value, out List<bool> result) {
+    public void UpdateReadys(int playerID, bool value, out bool result) {
         Readys[playerID] = value;
-        result = Readys;
+        result = Readys.FindAll(b => b == false).Count == 0;
+    }
+
+    public void ClearReadys() {
+        for (int i = 0; i < Readys.Count; i++)
+            Readys[i] = false;
     }
 
 
@@ -100,7 +98,16 @@ public class GameModel {
         NetworkUtilsAndConsts.Log(sb.ToString());
     }
 
+    public void MoveToTile(VoteResult result) {
+        CurrentTileIndex = result.Index;
+    }
+
     public void UpdateGamePhase(GamePhase gamePhase) {
         GamePhase = gamePhase;
+    }
+
+
+    public TileData GetCurrentTile() {
+        return TileRows.Last()[CurrentTileIndex];
     }
 }
