@@ -72,12 +72,12 @@ public class GameView : SubManager {
 
 
     //Loot
-    public void AddLoots(TileModel[] lootDatas) {
-        _viewLoot.AddLoots(lootDatas);
+    public void AddLoots(ItemModel[] itemModels) {
+        _viewLoot.AddLoots(itemModels);
     }
 
     public void ClickOnItem(int index) {
-        if (_gameModel.GamePhase == GamePhase.Tile && _gameModel.GetCurrentTile().TileType == TileType.Loot)
+        if (_gameModel.GamePhase == GamePhase.Tile && _gameModel.MapModel.GetCurrentTile().TileType == TileType.Loot)
             _connectionManager.SendMessage(MessageType.Vote, index);
     }
 

@@ -7,6 +7,7 @@ public static class GameUtilsAndConsts {
 
     public static int SHOWING_ROWS = 2;
     public static int EMPTY_VOTE = -1;
+    public static int EMPTY_ITEM = -1;
     public static string EMPTY_MESSAGE = "Empty";
     public static float MESSAGE_DELAY = 0.3f;
 
@@ -38,7 +39,18 @@ public static class GameUtilsAndConsts {
 
         for (int i = 0; i < rowSize; i++)
             result[i] = new TileModel(TileType.Loot, i);
-            //result[i] = new TileData((TileType)Random.Range(1, randomSize), i);
+        //result[i] = new TileData((TileType)Random.Range(1, randomSize), i);
+
+        return result;
+    }
+
+    public static ItemModel[] CreateItemRow() {
+        int randomSize = System.Enum.GetNames(typeof(TileType)).Length;
+        int rowSize = Random.Range(1, 5);
+        ItemModel[] result = new ItemModel[rowSize];
+
+        for (int i = 0; i < rowSize; i++)
+            result[i] = new ItemModel(Random.Range(1, randomSize), i);
 
         return result;
     }

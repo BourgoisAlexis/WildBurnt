@@ -18,8 +18,8 @@ public class ViewLoot : ViewWildBurntBasic {
     }
 
 
-    public void AddLoots(TileModel[] tileModels) {
-        int size = tileModels.Length;
+    public void AddLoots(ItemModel[] itemModels) {
+        int size = itemModels.Length;
 
         Vector2 midSize = _rectTransform.rect.size;
         float ratio = _top.anchorMin.y - _bot.anchorMax.y;
@@ -29,21 +29,21 @@ public class ViewLoot : ViewWildBurntBasic {
         float stepH = midSize.x / (float)(size + 1);
         float offsetH = midSize.x / 2 - stepH;
 
-        foreach (TileModel tileModel in tileModels) {
-            int index = tileModel.Index;
+        foreach (ItemModel itemModel in itemModels) {
+            int index = itemModel.Index;
             Vector2 pos = new Vector2(index * stepH - offsetH, 0);
-            _items.Add(AddSingleTile(pos, tileModels[index]));
+            _items.Add(AddSingleItem(pos, itemModels[index]));
         }
     }
 
-    private ItemView AddSingleTile(Vector2 position, TileModel datas) {
+    private ItemView AddSingleItem(Vector2 position, ItemModel itemModel) {
         GameObject go = Instantiate(_prefab, _rectTransform);
         ItemView item = go.GetComponent<ItemView>();
 
         go.AnimateRectTransform();
         go.transform.localPosition = position;
 
-        item.Init(datas, this);
+        item.Init(itemModel, this);
         item.SetInteractable(true);
 
         return item;

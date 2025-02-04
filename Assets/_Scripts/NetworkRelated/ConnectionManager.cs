@@ -142,16 +142,16 @@ public class ConnectionManager : SubManager {
             //Map
             case MessageType.MoveToTile:
                 VoteResult result = JsonUtility.FromJson<VoteResult>(message.Message);
-                _gameModel.MoveToTile(result);
+                _gameModel.MapModel.MoveToTile(result);
                 _gameView.MoveToTile(result);
                 break;
 
             case MessageType.AddTileRow:
                 TileModel[] tileModels = JsonUtility.FromJson<JSONableArray<TileModel>>(message.Message).Array;
-                _gameModel.AddTileRow(tileModels);
+                _gameModel.MapModel.AddTileRow(tileModels);
                 _gameView.AddTileRow(tileModels);
                 //Debug only
-                if (_gameModel.TileRows.Count >= GameUtilsAndConsts.SHOWING_ROWS)
+                if (_gameModel.MapModel.TileRows.Count >= GameUtilsAndConsts.SHOWING_ROWS)
                     VoteCountDown();
                 break;
 
@@ -162,9 +162,9 @@ public class ConnectionManager : SubManager {
 
             //Loot
             case MessageType.AddLoots:
-                TileModel[] lootDatas = JsonUtility.FromJson<JSONableArray<TileModel>>(message.Message).Array;
-                //_gameModel.AddTileRow(datas);
-                _gameView.AddLoots(lootDatas);
+                ItemModel[] itemModels = JsonUtility.FromJson<JSONableArray<ItemModel>>(message.Message).Array;
+                _gameModel.LootModel.AddLoots(itemModels);
+                _gameView.AddLoots(itemModels);
                 VoteCountDown();
                 break;
 
@@ -219,7 +219,7 @@ public class ConnectionManager : SubManager {
             SendMessage(MessageType.AddTileRow, json);
         }
         else if (_gameModel.GamePhase == GamePhase.Tile) {
-            TileModel tileModel = _gameModel.GetCurrentTile();
+            TileModel tileModel = _gameModel.MapModel.GetCurrentTile();
             if (tileModel.TileType == TileType.Loot) {
                 TileModel[] row = GameUtilsAndConsts.CreateTileRow();
                 string json = JsonUtility.ToJson(new JSONableArray<TileModel>(row));

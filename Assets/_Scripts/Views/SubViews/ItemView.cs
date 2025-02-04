@@ -10,15 +10,15 @@ public class ItemView : UIButtonAbstract<UnityEvent<int>> {
     [SerializeField] Image _highlight;
     [SerializeField] private List<GameObject> _voteSpots;
 
-    private TileModel _model;
+    private ItemModel _model;
     private ViewLoot _viewLoot;
     #endregion
 
 
-    public void Init(TileModel tileModel, ViewLoot viewLoot) {
-        _model = tileModel;
+    public void Init(ItemModel itemModel, ViewLoot viewLoot) {
+        _model = itemModel;
         _viewLoot = viewLoot;
-        _icon.sprite = DataLoader.Instance.LoadTileSprite((int)tileModel.TileType);
+        _icon.sprite = DataLoader.Instance.LoadTileSprite(itemModel.Id);
 
         Highlight(false);
 
