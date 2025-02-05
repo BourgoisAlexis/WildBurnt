@@ -11,12 +11,20 @@ public static class GameUtilsAndConsts {
     public static string EMPTY_MESSAGE = "Empty";
     public static float MESSAGE_DELAY = 0.3f;
 
-    public static List<MessageType> DONT_SEND_TO_SELF = new List<MessageType> {
+    public static List<MessageType> SENT_FROM_HOST_ONLY = new List<MessageType> {
         MessageType.Default,
 
-        MessageType.AskForID,
         MessageType.GiveID,
     };
+
+    public static List<MessageType> SENT_TO_HOST_ONLY = new List<MessageType> {
+        MessageType.AskForID,
+
+        MessageType.Ready,
+
+        MessageType.TakeLoot,
+    };
+
 
 
     public static Color ColorFromPlayerID(int index) {
@@ -31,30 +39,6 @@ public static class GameUtilsAndConsts {
 
         return Color.magenta;
     }
-
-    public static TileModel[] CreateTileRow() {
-        int randomSize = System.Enum.GetNames(typeof(TileType)).Length;
-        int rowSize = Random.Range(1, 5);
-        TileModel[] result = new TileModel[rowSize];
-
-        for (int i = 0; i < rowSize; i++)
-            result[i] = new TileModel(TileType.Loot, i);
-        //result[i] = new TileData((TileType)Random.Range(1, randomSize), i);
-
-        return result;
-    }
-
-    public static ItemModel[] CreateItemRow() {
-        int randomSize = System.Enum.GetNames(typeof(TileType)).Length;
-        int rowSize = Random.Range(1, 5);
-        ItemModel[] result = new ItemModel[rowSize];
-
-        for (int i = 0; i < rowSize; i++)
-            result[i] = new ItemModel(Random.Range(1, randomSize), i);
-
-        return result;
-    }
-
 
     //Extension methods
     public static void AnimateRectTransform(this GameObject go) {

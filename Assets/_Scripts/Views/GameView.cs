@@ -62,8 +62,10 @@ public class GameView : SubManager {
     }
 
     public void ClickOnTile(int index) {
-        if (_gameModel.GamePhase == GamePhase.Map)
-            _connectionManager.SendMessage(MessageType.Vote, index);
+        if (_gameModel.GamePhase != GamePhase.Map)
+            return;
+
+        _connectionManager.SendMessage(MessageType.Vote, index);
     }
 
     public void BackToMap() {
@@ -76,9 +78,11 @@ public class GameView : SubManager {
         _viewLoot.AddLoots(itemModels);
     }
 
-    public void ClickOnItem(int index) {
-        if (_gameModel.GamePhase == GamePhase.Tile && _gameModel.MapModel.GetCurrentTile().TileType == TileType.Loot)
-            _connectionManager.SendMessage(MessageType.Vote, index);
+    public void ClickOnLoot(int index) {
+        if (_gameModel.GamePhase != GamePhase.Tile || _gameModel.MapModel.GetCurrentTile().TileType != TileType.Loot)
+            return;
+
+        _connectionManager.SendMessage(MessageType.TakeLoot, index);
     }
 
 

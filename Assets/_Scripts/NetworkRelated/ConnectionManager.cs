@@ -78,26 +78,16 @@ public class ConnectionManager : SubManager {
 
     private void ReceivedMessage(PeerMessageWildBurnt message) {
         if (_logReceivedMessages)
-            Debug.Log($"{(_host ? "Host" : "Guest")} received a message : {message.ToString()}");
-
-        int i = GameUtilsAndConsts.EMPTY_VOTE;
-        string s = GameUtilsAndConsts.EMPTY_MESSAGE;
-        bool b = false;
+            Debug.Log($"{(_host ? "Host" : "Guest")} received {message.MessageType.ToString()} : {message.ToString()}");
 
         switch (message.MessageType) {
             //Connection
             case MessageType.AskForID:
-                if (!_host)
-                    break;
-
                 int playerID = _gameModel.CreatePlayer();
                 SendMessage(MessageType.GiveID, playerID);
                 break;
 
             case MessageType.GiveID:
-                if (_host)
-                    break;
-
                 _askingForID = false;
                 _guestID = int.Parse(message.Message);
                 _gameModel.CreatePlayer();
@@ -107,29 +97,29 @@ public class ConnectionManager : SubManager {
 
             //Game
             case MessageType.SetGamePhase:
-                i = int.Parse(message.Message);
-                _gameModel.SetGamePhase((GamePhase)i);
+                int gamePhase = int.Parse(message.Message);
+                _gameModel.SetGamePhase((GamePhase)gamePhase);
                 _gameView.ShowMessage($"Phase : {_gameModel.GamePhase}");
                 break;
 
             case MessageType.Ready:
-                b = bool.Parse(message.Message);
-                _gameModel.UpdateReadys(message.SenderID, b, out bool ready);
-                if (ready && _host)
+                bool ready = bool.Parse(message.Message);
+                _gameModel.UpdateReadys(message.SenderID, ready, out bool everybodyReady);
+                if (everybodyReady && _host)
                     OnViewLoaded();
                 break;
 
 
             //Vote
             case MessageType.Vote:
-                i = int.Parse(message.Message);
-                _gameModel.UpdateVotes(message.SenderID, i, out List<int> votes);
+                int voteIndex = int.Parse(message.Message);
+                _gameModel.UpdateVotes(message.SenderID, voteIndex, out List<int> votes);
                 _gameView.DisplayVotes(votes);
                 break;
 
             case MessageType.VoteTimer:
-                i = int.Parse(message.Message);
-                _gameView.ShowMessage($"Vote Timer : {i}");
+                int timer = int.Parse(message.Message);
+                _gameView.ShowMessage($"Vote Timer : {timer}");
                 break;
 
             case MessageType.VoteEnd:
@@ -168,20 +158,35 @@ public class ConnectionManager : SubManager {
                 VoteCountDown();
                 break;
 
+            case MessageType.TakeLoot:
+                //ItemModel itemModel = _gameModel.LootModel.loo
+                //_gameModel.add
+                break;
+
 
             //Default
             case MessageType.Default:
                 break;
         }
+
+        if (!_host)
+            return;
+
+        if (message.SenderID != 0 && !message.IsBroadcasted && !GameUtilsAndConsts.SENT_TO_HOST_ONLY.Contains(message.MessageType))
+            Broadcast(message);
     }
 
+
+    private void SendMessage(PeerMessageWildBurnt message) {
+        _messageQueue.Enqueue(message);
+    }
 
     public void SendMessage(MessageType messageType, object obj) {
         SendMessage(messageType, obj.ToString());
     }
 
     public void SendMessage(MessageType messageType, string content = "Empty") {
-        PeerMessageWildBurnt m = new PeerMessageWildBurnt(_guestID, messageType, content);
+        PeerMessageWildBurnt m = new PeerMessageWildBurnt(_guestID, false, messageType, content);
         _messageQueue.Enqueue(m);
     }
 
@@ -197,32 +202,42 @@ public class ConnectionManager : SubManager {
 
             PeerMessageWildBurnt m = _messageQueue.Dequeue();
 
-            await _connection.SendMessageTask(m);
+            if (_host) {
+                if (!GameUtilsAndConsts.SENT_TO_HOST_ONLY.Contains(m.MessageType))
+                    await _connection.SendMessageTask(m);
+                if (!m.IsBroadcasted && !GameUtilsAndConsts.SENT_FROM_HOST_ONLY.Contains(m.MessageType))
+                    ReceivedMessage(m);
+            }
+            else
+                await _connection.SendMessageTask(m);
 
             if (_logSentMessages)
-                Debug.Log($"{(_host ? "Host" : "Guest")} sent a message : {m.ToString()}");
+                Debug.Log($"{(_host ? "Host" : "Guest")} sent {m.MessageType.ToString()} : {m.ToString()}");
 
             _sendingMessage = false;
-
-            if (GameUtilsAndConsts.DONT_SEND_TO_SELF.Contains(m.MessageType))
-                return;
-
-            ReceivedMessage(m);
         }
+    }
+
+    private void Broadcast(PeerMessageWildBurnt message) {
+        if (!_host)
+            return;
+
+        message.IsBroadcasted = true;
+        SendMessage(message);
     }
 
 
     private void OnViewLoaded() {
         if (_gameModel.GamePhase == GamePhase.Map) {
-            TileModel[] tileModels = GameUtilsAndConsts.CreateTileRow();
+            TileModel[] tileModels = _gameModel.MapModel.CreateTileRow();
             string json = JsonUtility.ToJson(new JSONableArray<TileModel>(tileModels));
             SendMessage(MessageType.AddTileRow, json);
         }
         else if (_gameModel.GamePhase == GamePhase.Tile) {
             TileModel tileModel = _gameModel.MapModel.GetCurrentTile();
             if (tileModel.TileType == TileType.Loot) {
-                TileModel[] row = GameUtilsAndConsts.CreateTileRow();
-                string json = JsonUtility.ToJson(new JSONableArray<TileModel>(row));
+                ItemModel[] itemModels = _gameModel.LootModel.CreateItemSet();
+                string json = JsonUtility.ToJson(new JSONableArray<ItemModel>(itemModels));
                 SendMessage(MessageType.AddLoots, json);
             }
         }
@@ -245,11 +260,15 @@ public class ConnectionManager : SubManager {
 
     private void VoteCountDown() {
         if (_host) {
-            _manager.StartCountDown(5, (int v) => {
+            _manager.StartCountDown(3, (int v) => {
                 SendMessage(MessageType.VoteTimer, v);
             }, () => {
                 SendMessage(MessageType.VoteEnd);
             });
         }
+    }
+
+    public void TestMessage() {
+        SendMessage(MessageType.TakeLoot, 1);
     }
 }

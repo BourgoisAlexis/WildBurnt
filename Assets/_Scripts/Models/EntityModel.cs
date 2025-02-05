@@ -4,11 +4,12 @@ using System;
 public struct EntityModel {
     public int Health;
     public int Strength;
-    public int Def;
+    public int Magic;
 
-    public EntityModel(int health, int strength, int def) {
+
+    public EntityModel(int health, int strength, int magic) {
         Health = health;
         Strength = strength;
-        Def = def;
+        Magic = magic;
     }
 }

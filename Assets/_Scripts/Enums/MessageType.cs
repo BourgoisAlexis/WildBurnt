@@ -21,4 +21,5 @@ public enum MessageType {
 
     //Loot
     AddLoots,
+    TakeLoot,
 }

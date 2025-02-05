@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,14 +7,30 @@ public class MapModel {
     public List<TileModel[]> TileRows { get; private set; }
     public int CurrentTileIndex { get; private set; }
     public List<int> CurrentVote { get; private set; }
+    public WeightedGenerator WeightedGenerator { get; private set; }
 
 
     public MapModel() {
         TileRows = new List<TileModel[]>();
         CurrentTileIndex = 0;
         CurrentVote = new List<int>();
+        WeightedGenerator = new WeightedGenerator(Enum.GetNames(typeof(TileType)).Length, 1);
     }
 
+
+    public TileModel[] CreateTileRow() {
+        int rowSize = UnityEngine.Random.Range(1, 5);
+        int[] array = WeightedGenerator.GenerateArray(rowSize);
+        TileModel[] result = new TileModel[rowSize];
+
+        for (int i = 0; i < rowSize; i++)
+            result[i] = new TileModel(TileType.Loot, i);
+        //result[i] = new TileModel((TileType)array[i], i);
+
+        NetworkUtilsAndConsts.LogError($"-Generating only loots atm-");
+
+        return result;
+    }
 
     public void AddTileRow(TileModel[] tileDatas) {
         TileRows.Add(tileDatas);

@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour {
         ConnectionManager.SendMessage(MessageType.SetGamePhase, (int)GamePhase.Map);
 
         for (int i = 0; i < GameUtilsAndConsts.SHOWING_ROWS; i++) {
-            TileModel[] tileModels = GameUtilsAndConsts.CreateTileRow();
+            TileModel[] tileModels = GameModel.MapModel.CreateTileRow();
             string json = JsonUtility.ToJson(new JSONableArray<TileModel>(tileModels));
             ConnectionManager.SendMessage(MessageType.AddTileRow, json);
 

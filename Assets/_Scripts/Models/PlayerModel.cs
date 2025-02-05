@@ -2,17 +2,14 @@ using System;
 
 [Serializable]
 public struct PlayerModel {
-    public int ID;
-    public string UserName;
-    public int[,] Inventory;
+    public int ID { get; private set; }
+    public string UserName { get; private set; }
+    public CharacterModel CharacterModel { get; private set; }
+
 
     public PlayerModel(int id) {
         ID = id;
         UserName = $"Player_{id}";
-        Inventory = new int[5, 5];
-
-        for (int x = 0; x < Inventory.GetLength(0); x++)
-            for (int y = 0; y < Inventory.GetLength(1); y++)
-                Inventory[x, y] = GameUtilsAndConsts.EMPTY_ITEM;
+        CharacterModel = new CharacterModel(new EntityModel(10, 5, 5));
     }
 }

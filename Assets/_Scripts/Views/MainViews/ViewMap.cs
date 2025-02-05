@@ -71,7 +71,8 @@ public class ViewMap : ViewWildBurntBasic {
         go.AnimateRectTransform();
         go.transform.localPosition = position;
 
-        tile.Init(tileModel, this);
+        tile.Init(tileModel);
+        tile.OnClick.AddListener(ClickOnTile);
 
         return tile;
     }

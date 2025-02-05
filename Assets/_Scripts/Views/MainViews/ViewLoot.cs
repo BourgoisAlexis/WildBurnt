@@ -18,7 +18,16 @@ public class ViewLoot : ViewWildBurntBasic {
     }
 
 
+    private void Clear() {
+        foreach (ItemView itemView in _items)
+            Destroy(itemView.gameObject);
+
+        _items.Clear();
+    }
+
     public void AddLoots(ItemModel[] itemModels) {
+        Clear();
+
         int size = itemModels.Length;
 
         Vector2 midSize = _rectTransform.rect.size;
@@ -43,25 +52,16 @@ public class ViewLoot : ViewWildBurntBasic {
         go.AnimateRectTransform();
         go.transform.localPosition = position;
 
-        item.Init(itemModel, this);
+        item.Init(itemModel);
+        item.OnClick.AddListener(ClickOnLoot);
         item.SetInteractable(true);
 
         return item;
     }
 
-    public void DisplayVotes(List<int> votes) {
-        foreach (ItemView item in _items)
-            item.DisplayVotes(votes);
-    }
-
-    public void DisplaySelectedTile(VoteResult result) {
-        //TileView[] tiles = _tileRows[_nextRowIndex];
-        //tiles[result.Index].Highlight(true);
-    }
-
 
     //Actions
-    public void ClickOnItem(int index) {
-        _gameView.ClickOnTile(index);
+    public void ClickOnLoot(int index) {
+        _gameView.ClickOnLoot(index);
     }
 }

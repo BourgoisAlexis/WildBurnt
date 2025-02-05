@@ -11,13 +11,11 @@ public class TileView : UIButtonAbstract<UnityEvent<int>> {
     [SerializeField] private List<GameObject> _voteSpots;
 
     private TileModel _model;
-    private ViewMap _viewMap;
     #endregion
 
 
-    public void Init(TileModel tileModel, ViewMap viewMap) {
+    public void Init(TileModel tileModel) {
         _model = tileModel;
-        _viewMap = viewMap;
         _icon.sprite = DataLoader.Instance.LoadTileSprite((int)tileModel.TileType);
 
         Highlight(false);
@@ -39,6 +37,6 @@ public class TileView : UIButtonAbstract<UnityEvent<int>> {
     }
 
     public override void OnPointerClick(PointerEventData eventData) {
-        _viewMap.ClickOnTile(_model.Index);
+        OnClick?.Invoke(_model.Index);
     }
 }
