@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using UnityEngine;
 
+[Serializable]
 public class GameModel {
     #region Variables
     public GamePhase GamePhase { get; private set; }
-    public List<PlayerModel> PlayerModels { get; private set; }
+    [field: SerializeField] public List<PlayerModel> PlayerModels { get; private set; }
     public List<bool> Readys { get; private set; }
     public MapModel MapModel { get; private set; }
     public LootModel LootModel { get; private set; }
@@ -30,7 +31,7 @@ public class GameModel {
         return PlayerModels.Count - 1;
     }
 
-    public void UpdateReadys(int playerID, bool value, out bool result) {
+    public void Ready(int playerID, bool value, out bool result) {
         Readys[playerID] = value;
         result = Readys.FindAll(b => b == false).Count == 0;
     }
@@ -45,7 +46,7 @@ public class GameModel {
     }
 
 
-    public void UpdateVotes(int playerID, int value, out List<int> result) {
+    public void Vote(int playerID, int value, out List<int> result) {
         if (GamePhase == GamePhase.Map) {
             MapModel.UpdateVotes(playerID, value, out result);
             return;
@@ -56,6 +57,11 @@ public class GameModel {
             result.Add(GameUtilsAndConsts.EMPTY_VOTE);
     }
 
+    public void ClearVotes() {
+        if (GamePhase == GamePhase.Map)
+            MapModel.ClearVotes();
+    }
+
     public VoteResult GetVoteResult() {
         if (GamePhase == GamePhase.Map)
             return MapModel.GetVoteResult();
@@ -63,8 +69,9 @@ public class GameModel {
         return new VoteResult(true, 0, 0);
     }
 
-    public void ClearVotes() {
-        if (GamePhase == GamePhase.Map)
-            MapModel.ClearVotes();
+
+    public void LootTaken(int playerID, int lootIndex, int itemID) {
+        LootModel.TakeLoot(lootIndex);
+        PlayerModels[playerID].AddItemToInventory(itemID);
     }
 }

@@ -1667,6 +1667,14 @@ PrefabInstance:
       propertyPath: _guest
       value: 
       objectReference: {fileID: 1499877546}
+    - target: {fileID: 820830713730017423, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: _logSentMessages
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 820830713730017423, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: _logReceivedMessages
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2688185540495998641, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

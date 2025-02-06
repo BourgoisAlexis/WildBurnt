@@ -3,10 +3,9 @@ using System;
 [Serializable]
 public struct TileModel {
     public TileType TileType;
-    public int Index;
 
-    public TileModel(TileType type, int index) {
+
+    public TileModel(TileType type) {
         TileType = type;
-        Index = index;
     }
 }

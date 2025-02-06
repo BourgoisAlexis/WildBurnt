@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,10 +35,9 @@ public class ViewMap : ViewWildBurntBasic {
         float stepH = midSize.x / (float)(size + 1);
         float offsetH = midSize.x / 2 - stepH;
 
-        foreach (TileModel tileModel in tileModels) {
-            int index = tileModel.Index;
-            Vector2 pos = new Vector2(index * stepH - offsetH, 0);
-            row[index] = AddSingleTile(pos, tileModels[index]);
+        for (int i = 0; i < size; i++) {
+            Vector2 pos = new Vector2(i * stepH - offsetH, 0);
+            row[i] = AddSingleTile(pos, tileModels[i], i);
         }
 
         _tileRows.Add(row);
@@ -64,14 +64,14 @@ public class ViewMap : ViewWildBurntBasic {
         }
     }
 
-    private TileView AddSingleTile(Vector2 position, TileModel tileModel) {
+    private TileView AddSingleTile(Vector2 position, TileModel tileModel, int index) {
         GameObject go = Instantiate(_prefab, _rectTransform);
         TileView tile = go.GetComponent<TileView>();
 
         go.AnimateRectTransform();
         go.transform.localPosition = position;
 
-        tile.Init(tileModel);
+        tile.Init(tileModel, index);
         tile.OnClick.AddListener(ClickOnTile);
 
         return tile;

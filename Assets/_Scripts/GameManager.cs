@@ -5,8 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     [field: SerializeField] public ConnectionManager ConnectionManager { get; private set; }
     [field: SerializeField] public GameView GameView { get; private set; }
+    [field: SerializeField] public CharacterView CharacterView { get; private set; }
 
-    public GameModel GameModel { get; private set; }
+    [field: SerializeField] public GameModel GameModel { get; private set; }
 
 
     private void Awake() {
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour {
     private void Start() {
         ConnectionManager.Init(this);
         GameView.Init(this);
+        CharacterView.Init(this);
     }
 
 

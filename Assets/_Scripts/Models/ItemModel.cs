@@ -3,10 +3,10 @@ using System;
 [Serializable]
 public struct ItemModel {
     public int Id;
-    public int Index;
+    public StatModel StatModel;
 
-    public ItemModel(int id, int index) {
+    public ItemModel(int id, StatModel statModel) {
         Id = id;
-        Index = index;
+        StatModel = statModel;
     }
 }

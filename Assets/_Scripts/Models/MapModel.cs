@@ -24,10 +24,10 @@ public class MapModel {
         TileModel[] result = new TileModel[rowSize];
 
         for (int i = 0; i < rowSize; i++)
-            result[i] = new TileModel(TileType.Loot, i);
-        //result[i] = new TileModel((TileType)array[i], i);
+            result[i] = new TileModel(TileType.Loot);
+        //result[i] = new TileModel((TileType)array[i]);
 
-        NetworkUtilsAndConsts.LogError($"-Generating only loots atm-");
+        NetworkUtilsAndConsts.Log($"-Generating only loots atm-");
 
         return result;
     }

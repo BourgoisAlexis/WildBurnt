@@ -11,14 +11,19 @@ public static class GameUtilsAndConsts {
     public static string EMPTY_MESSAGE = "Empty";
     public static float MESSAGE_DELAY = 0.3f;
 
-    public static List<MessageType> SENT_FROM_HOST_ONLY = new List<MessageType> {
+    public static List<MessageType> SENT_TO_GUEST_ONLY = new List<MessageType> {
         MessageType.Default,
 
         MessageType.GiveID,
     };
 
+    //These are the messages used to update the gameModel on host side
+    //As long as we don't display anything on update we don't need to send them to guests
+    //But they can be sent by the host to itself
     public static List<MessageType> SENT_TO_HOST_ONLY = new List<MessageType> {
         MessageType.AskForID,
+
+        MessageType.VoteEnd,
 
         MessageType.Ready,
 

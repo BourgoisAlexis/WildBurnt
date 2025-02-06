@@ -68,6 +68,10 @@ public class GameView : SubManager {
         _connectionManager.SendMessage(MessageType.Vote, index);
     }
 
+    public void DisplayVotes(List<int> votes) {
+        _viewMap.DisplayVotes(votes);
+    }
+
     public void BackToMap() {
         _viewManager.ShowView(0, false, this);
     }
@@ -87,10 +91,6 @@ public class GameView : SubManager {
 
 
     //Views
-    public void DisplayVotes(List<int> votes) {
-        _viewMap.DisplayVotes(votes);
-    }
-
     public void ViewLoaded() {
         _connectionManager.SendMessage(MessageType.Ready, true);
     }

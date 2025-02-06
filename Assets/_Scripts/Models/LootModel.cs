@@ -17,9 +17,10 @@ public class LootModel {
 
     public ItemModel TakeLoot(int index) {
         ItemModel result = ItemModels[index];
-        ItemModels[index] = new ItemModel(GameUtilsAndConsts.EMPTY_ITEM, GameUtilsAndConsts.EMPTY_ITEM);
-        return ItemModels[index];
+        ItemModels[index] = new ItemModel(GameUtilsAndConsts.EMPTY_ITEM, new StatModel(0, 0, 0, 0));
+        return result;
     }
+
 
     public ItemModel[] CreateItemSet() {
         int rowSize = UnityEngine.Random.Range(2, 6);
@@ -27,8 +28,17 @@ public class LootModel {
         ItemModel[] result = new ItemModel[rowSize];
 
         for (int i = 0; i < rowSize; i++)
-            result[i] = new ItemModel(array[i], i);
+            result[i] = CreateRandomItem(array[i]);
 
         return result;
+    }
+
+    private ItemModel CreateRandomItem(int i) {
+        int r = UnityEngine.Random.Range(0, 10);
+        StatModel statModel = new StatModel(0, 0, r, 0);
+
+        NetworkUtilsAndConsts.Log($"-Generating random loots atm-");
+
+        return new ItemModel(i, statModel);
     }
 }

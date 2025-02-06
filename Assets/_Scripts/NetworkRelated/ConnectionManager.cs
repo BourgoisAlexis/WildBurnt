@@ -24,6 +24,7 @@ public class ConnectionManager : SubManager {
 
     private GameModel _gameModel => _manager.GameModel;
     private GameView _gameView => _manager.GameView;
+    private CharacterView _characterView => _manager.CharacterView;
     #endregion
 
 
@@ -104,7 +105,7 @@ public class ConnectionManager : SubManager {
 
             case MessageType.Ready:
                 bool ready = bool.Parse(message.Message);
-                _gameModel.UpdateReadys(message.SenderID, ready, out bool everybodyReady);
+                _gameModel.Ready(message.SenderID, ready, out bool everybodyReady);
                 if (everybodyReady && _host)
                     OnViewLoaded();
                 break;
@@ -113,7 +114,7 @@ public class ConnectionManager : SubManager {
             //Vote
             case MessageType.Vote:
                 int voteIndex = int.Parse(message.Message);
-                _gameModel.UpdateVotes(message.SenderID, voteIndex, out List<int> votes);
+                _gameModel.Vote(message.SenderID, voteIndex, out List<int> votes);
                 _gameView.DisplayVotes(votes);
                 break;
 
@@ -124,8 +125,7 @@ public class ConnectionManager : SubManager {
 
             case MessageType.VoteEnd:
                 _gameView.ShowMessage($"Vote Ended");
-                if (_host)
-                    OnVoteEnd();
+                OnVoteEnd();
                 break;
 
 
@@ -158,9 +158,21 @@ public class ConnectionManager : SubManager {
                 VoteCountDown();
                 break;
 
-            case MessageType.TakeLoot:
-                //ItemModel itemModel = _gameModel.LootModel.loo
-                //_gameModel.add
+            case MessageType.TakeLoot: {
+                    int lootIndex = int.Parse(message.Message);
+                    ItemModel itemModel = _gameModel.LootModel.TakeLoot(lootIndex);
+                    if (itemModel.Id != GameUtilsAndConsts.EMPTY_ITEM)
+                        SendMessage(MessageType.LootTaken, JsonUtility.ToJson(new JSONableArray<int>(new int[] { lootIndex, message.SenderID, itemModel.Id})));
+                }
+                break;
+
+            case MessageType.LootTaken: {
+                    int[] lootInfos = JsonUtility.FromJson<JSONableArray<int>>(message.Message).Array;
+                    int lootIndex = lootInfos[0];
+                    int playerId = lootInfos[1];
+                    int itemID = lootInfos[2];
+                    _gameModel.LootTaken(playerId, lootIndex, itemID);
+                }
                 break;
 
 
@@ -205,11 +217,12 @@ public class ConnectionManager : SubManager {
             if (_host) {
                 if (!GameUtilsAndConsts.SENT_TO_HOST_ONLY.Contains(m.MessageType))
                     await _connection.SendMessageTask(m);
-                if (!m.IsBroadcasted && !GameUtilsAndConsts.SENT_FROM_HOST_ONLY.Contains(m.MessageType))
+                if (!m.IsBroadcasted && !GameUtilsAndConsts.SENT_TO_GUEST_ONLY.Contains(m.MessageType))
                     ReceivedMessage(m);
             }
-            else
+            else if (!GameUtilsAndConsts.SENT_TO_GUEST_ONLY.Contains(m.MessageType)) {
                 await _connection.SendMessageTask(m);
+            }
 
             if (_logSentMessages)
                 Debug.Log($"{(_host ? "Host" : "Guest")} sent {m.MessageType.ToString()} : {m.ToString()}");

@@ -38,21 +38,20 @@ public class ViewLoot : ViewWildBurntBasic {
         float stepH = midSize.x / (float)(size + 1);
         float offsetH = midSize.x / 2 - stepH;
 
-        foreach (ItemModel itemModel in itemModels) {
-            int index = itemModel.Index;
-            Vector2 pos = new Vector2(index * stepH - offsetH, 0);
-            _items.Add(AddSingleItem(pos, itemModels[index]));
+        for (int i = 0; i < size; i++) {
+            Vector2 pos = new Vector2(i * stepH - offsetH, 0);
+            _items.Add(AddSingleItem(pos, itemModels[i], i));
         }
     }
 
-    private ItemView AddSingleItem(Vector2 position, ItemModel itemModel) {
+    private ItemView AddSingleItem(Vector2 position, ItemModel itemModel, int index) {
         GameObject go = Instantiate(_prefab, _rectTransform);
         ItemView item = go.GetComponent<ItemView>();
 
         go.AnimateRectTransform();
         go.transform.localPosition = position;
 
-        item.Init(itemModel);
+        item.Init(itemModel, index);
         item.OnClick.AddListener(ClickOnLoot);
         item.SetInteractable(true);
 

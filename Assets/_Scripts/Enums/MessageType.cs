@@ -8,6 +8,7 @@ public enum MessageType {
     //Game
     SetGamePhase,
     Ready,
+    EveryOneReady,
 
     //Vote
     Vote,
@@ -22,4 +23,5 @@ public enum MessageType {
     //Loot
     AddLoots,
     TakeLoot,
+    LootTaken,
 }
