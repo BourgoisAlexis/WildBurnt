@@ -1,10 +1,13 @@
+using UnityEditor;
 using UnityEngine;
+using System;
 
 public class DataLoader : MonoBehaviour {
     public static DataLoader Instance;
 
     #region Variables
-    [SerializeField] private Sprite[] _tileSprites;
+    [field: SerializeField] public Sprite[] TileSprites { get; private set; }
+    [field: SerializeField] public ItemScriptable[] ItemScriptables { get; private set; }
     #endregion
 
 
@@ -17,7 +20,27 @@ public class DataLoader : MonoBehaviour {
         }
     }
 
+#if UNITY_EDITOR
+    public void UpdateDatas() {
+        string[] folders = new string[] { "Assets/Scriptables" };
+        string[] guids = AssetDatabase.FindAssets("t:ItemScriptable", folders);
+        ItemScriptables = new ItemScriptable[guids.Length];
+
+        for (int i = 0; i < guids.Length; i++)
+            ItemScriptables[i] = AssetDatabase.LoadAssetAtPath<ItemScriptable>(AssetDatabase.GUIDToAssetPath(guids[i]));
+    }
+#endif
+
+    public Sprite LoadTileSprite(TileType tileType) {
+        return LoadTileSprite((int)tileType);
+    }
+
     public Sprite LoadTileSprite(int index) {
-        return _tileSprites[index];
+        return TileSprites[index];
+    }
+
+    public ItemModel LoadItemModel(int id) {
+        ItemScriptable item = Array.Find(ItemScriptables, x => x.Id == id);
+        return new ItemModel(item);
     }
 }

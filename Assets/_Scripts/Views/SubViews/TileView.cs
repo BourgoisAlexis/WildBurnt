@@ -18,7 +18,7 @@ public class TileView : UIButtonAbstract<UnityEvent<int>> {
     public void Init(TileModel tileModel, int index) {
         _model = tileModel;
         _index = index;
-        _icon.sprite = DataLoader.Instance.LoadTileSprite((int)tileModel.TileType);
+        _icon.sprite = DataLoader.Instance.LoadTileSprite(_model.TileType);
 
         Highlight(false);
 

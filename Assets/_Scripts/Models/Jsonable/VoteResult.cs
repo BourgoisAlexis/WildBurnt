@@ -6,6 +6,7 @@ public struct VoteResult {
     public int Index;
     public int Value;
 
+
     public VoteResult(bool randomized, int index, int value) {
         Randomized = randomized;
         Index = index;

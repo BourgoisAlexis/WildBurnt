@@ -5,7 +5,7 @@ public struct TileModel {
     public TileType TileType;
 
 
-    public TileModel(TileType type) {
-        TileType = type;
+    public TileModel(TileType tileType) {
+        TileType = tileType;
     }
 }

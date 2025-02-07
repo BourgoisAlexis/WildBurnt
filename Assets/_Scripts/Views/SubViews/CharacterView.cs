@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -12,6 +13,7 @@ public class CharacterView : SubManager {
     private Vector2 _initMax;
 
     private int _focusIndex = 0;
+    private List<ItemView> _views = new List<ItemView>();
 
 
     private void Awake() {
@@ -23,19 +25,21 @@ public class CharacterView : SubManager {
         _inventoryButton.OnClick.AddListener(ShowInventory);
     }
 
+
     public async void ShowInventory(bool show) {
         if (show) {
             _inventoryView.gameObject.SetActive(true);
-            _inventoryView.DOAnchorMax(_initMax, UIUtilsAndConsts.ANIM_DURATION);
-            UpdateInventory();
+            await _inventoryView.DOAnchorMax(_initMax, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
+            UpdateInventoryView();
         }
         else {
             await _inventoryView.DOAnchorMax(_initMin, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
             _inventoryView.gameObject.SetActive(false);
+            ClearInventoryView();
         }
     }
 
-    public void UpdateInventory() {
+    public void UpdateInventoryView() {
         int[] inventory = _manager.GameModel.PlayerModels[_focusIndex].Inventory;
         foreach (int item in inventory) {
             GameObject go = Instantiate(_prefab, _inventoryView);
@@ -44,7 +48,15 @@ public class CharacterView : SubManager {
             go.AnimateRectTransform();
 
             itemView.Init(new ItemModel(item, new StatModel(0, 0, 0, 0)), 0);
-            itemView.SetInteractable(false);
+
+            _views.Add(itemView);
         }
+    }
+
+    private void ClearInventoryView() {
+        foreach (ItemView view in _views)
+            Destroy(view.gameObject);
+
+        _views.Clear();
     }
 }

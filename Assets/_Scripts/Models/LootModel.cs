@@ -2,12 +2,12 @@ public class LootModel {
     public ItemModel[] ItemModels { get; private set; }
     public WeightedGenerator WeightedGenerator { get; private set; }
 
-    private int _itemNumber = 20;
+    private int _numberofItems = 4;
 
 
     public LootModel() {
         ItemModels = new ItemModel[0];
-        WeightedGenerator = new WeightedGenerator(_itemNumber, 1);
+        WeightedGenerator = new WeightedGenerator(_numberofItems, 1);
     }
 
 
@@ -34,11 +34,7 @@ public class LootModel {
     }
 
     private ItemModel CreateRandomItem(int i) {
-        int r = UnityEngine.Random.Range(0, 10);
-        StatModel statModel = new StatModel(0, 0, r, 0);
-
-        NetworkUtilsAndConsts.Log($"-Generating random loots atm-");
-
-        return new ItemModel(i, statModel);
+        int r = UnityEngine.Random.Range(0, DataLoader.Instance.ItemScriptables.Length);
+        return DataLoader.Instance.LoadItemModel(r);
     }
 }

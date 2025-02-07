@@ -2,12 +2,12 @@ using System;
 
 [Serializable]
 public struct CharacterModel {
-    public EntityModel EntityModel { get; private set; }
-    public int[,] Inventory { get; private set; }
+    public EntityModel EntityModel;
+    public int[,] Inventory;
 
 
     public CharacterModel(EntityModel entityModel, int inventorySize = 5) {
-        this.EntityModel = entityModel;
+        EntityModel = entityModel;
         Inventory = new int[inventorySize, inventorySize];
 
         for (int x = 0; x < Inventory.GetLength(0); x++)

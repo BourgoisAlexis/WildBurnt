@@ -12,6 +12,7 @@ public class TestButton : MonoBehaviour {
 
     private WeightedGenerator _generator;
 
+
     public void R() {
         _generator = new WeightedGenerator(Enum.GetNames(typeof(TileType)).Count(), WeightStep);
 

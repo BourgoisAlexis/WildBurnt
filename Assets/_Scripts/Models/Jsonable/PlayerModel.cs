@@ -1,20 +1,18 @@
 using System;
-using UnityEngine;
 
 [Serializable]
 public struct PlayerModel {
-    [field: SerializeField] public int ID { get; private set; }
-    public string UserName { get; private set; }
-    public CharacterModel CharacterModel { get; private set; }
-    [field: SerializeField] public int[] Inventory { get; private set; }
+    public int ID;
+    public string UserName;
+    public CharacterModel CharacterModel;
+    public int[] Inventory;
 
 
     public PlayerModel(int id) {
         ID = id;
         UserName = $"Player_{id}";
-        CharacterModel = new CharacterModel(new EntityModel(10, 5, 5));
-        int inventorySize = 10;
-        Inventory = new int[inventorySize];
+        CharacterModel = new CharacterModel(new EntityModel(new StatModel(10, 5, 5, 5)));
+        Inventory = new int[5];
         Array.Fill(Inventory, GameUtilsAndConsts.EMPTY_ITEM);
     }
 
