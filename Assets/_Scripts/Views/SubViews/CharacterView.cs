@@ -1,11 +1,9 @@
 using DG.Tweening;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class CharacterView : SubManager {
-    [SerializeField] private UIButtonToggle _inventoryButton;
+    [SerializeField] private UIButtonToggle[] _inventoryButtons;
     [SerializeField] private RectTransform _inventoryView;
     [SerializeField] private GameObject _prefab;
 
@@ -22,7 +20,10 @@ public class CharacterView : SubManager {
 
         _inventoryView.gameObject.SetActive(false);
         _inventoryView.anchorMax = _initMin;
-        _inventoryButton.OnClick.AddListener(ShowInventory);
+
+        for (int i = 0; i < _inventoryButtons.Length; i++) {
+            _inventoryButtons[i].OnClick.AddListener(ShowInventory);
+        }
     }
 
 

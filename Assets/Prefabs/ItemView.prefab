@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.3, y: 0.2}
   m_AnchorMax: {x: 0.7, y: 0.6}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -0.000002503395}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2305775680844141827
 CanvasRenderer:
@@ -229,9 +229,3 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  _highlight: {fileID: 0}
-  _voteSpots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
