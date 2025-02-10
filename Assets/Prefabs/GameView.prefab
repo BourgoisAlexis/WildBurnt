@@ -359,7 +359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.62352943, b: 0.9000759, a: 1}
+  m_Color: {r: 0.3414524, g: 0.3414524, b: 0.4490565, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -389,6 +389,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiStyle: {fileID: 11400000, guid: e18316c9e63b2e04995d946ec850fb82, type: 2}
+  _uiDatas:
+    RectTransform: {fileID: 715554772453308179}
+    Background: {fileID: 7942590430346423182}
+    Icon: {fileID: 0}
+    Text: {fileID: 1614984109419243147}
 --- !u!1 &3064716317785107610
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,6 +484,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiStyle: {fileID: 11400000, guid: e18316c9e63b2e04995d946ec850fb82, type: 2}
+  _uiDatas:
+    RectTransform: {fileID: 2972272365808372802}
+    Background: {fileID: 1996929728302726397}
+    Icon: {fileID: 0}
+    Text: {fileID: 3161423127965468363}
   _backButton: {fileID: 0}
   _top: {fileID: 7114081672015023447}
   _bot: {fileID: 6917191280611465930}
@@ -587,6 +597,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiStyle: {fileID: 11400000, guid: e18316c9e63b2e04995d946ec850fb82, type: 2}
+  _uiDatas:
+    RectTransform: {fileID: 810657027998638365}
+    Background: {fileID: 7436234598149476314}
+    Icon: {fileID: 0}
+    Text: {fileID: 8861539449419910327}
   _backButton: {fileID: 0}
   _top: {fileID: 7114081672015023447}
   _bot: {fileID: 6917191280611465930}
@@ -1233,6 +1248,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiStyle: {fileID: 11400000, guid: e18316c9e63b2e04995d946ec850fb82, type: 2}
+  _uiDatas:
+    RectTransform: {fileID: 4865341749807757710}
+    Background: {fileID: 2701599372460996664}
+    Icon: {fileID: 0}
+    Text: {fileID: 7591139713844645067}
   _backButton: {fileID: 0}
 --- !u!1 &6246347310157856317
 GameObject:
@@ -1460,6 +1480,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiStyle: {fileID: 11400000, guid: e18316c9e63b2e04995d946ec850fb82, type: 2}
+  _uiDatas:
+    RectTransform: {fileID: 4376765150068857340}
+    Background: {fileID: 6804031109119541814}
+    Icon: {fileID: 0}
+    Text: {fileID: 1475377100806356557}
   _backButton: {fileID: 0}
 --- !u!1 &7549561226209252170
 GameObject:
@@ -1626,6 +1651,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiStyle: {fileID: 11400000, guid: e18316c9e63b2e04995d946ec850fb82, type: 2}
+  _uiDatas:
+    RectTransform: {fileID: 7986318340522322821}
+    Background: {fileID: 7855645597944154922}
+    Icon: {fileID: 0}
+    Text: {fileID: 5531995780441216015}
   _backButton: {fileID: 0}
 --- !u!1 &8114419907594044084
 GameObject:
@@ -1701,8 +1731,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4294565341
+  m_fontColor: {r: 0.86855817, g: 0.86855817, b: 0.97735846, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2255,10 +2285,6 @@ PrefabInstance:
     - target: {fileID: 4899360394472582014, guid: 7f17977fef486e2498c9d76976524e1b, type: 3}
       propertyPath: m_Name
       value: CharacterView
-      objectReference: {fileID: 0}
-    - target: {fileID: 4899360394472582014, guid: 7f17977fef486e2498c9d76976524e1b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8360802420751721934, guid: 7f17977fef486e2498c9d76976524e1b, type: 3}
       propertyPath: m_Pivot.x

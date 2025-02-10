@@ -1,5 +1,4 @@
 using DG.Tweening;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,9 +16,8 @@ public class ViewMap : ViewWildBurntBasic {
     #endregion
 
 
-    protected override void Awake() {
+    private void Awake() {
         _tileRows = new List<TileView[]>();
-        base.Awake();
     }
 
 

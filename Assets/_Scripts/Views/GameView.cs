@@ -78,15 +78,26 @@ public class GameView : SubManager {
 
 
     //Loot
+    private bool IsLootPhase() {
+        return (_gameModel.GamePhase == GamePhase.Tile && _gameModel.MapModel.GetCurrentTile().TileType == TileType.Loot);
+    }
+
     public void AddLoots(ItemModel[] itemModels) {
         _viewLoot.AddLoots(itemModels);
     }
 
     public void ClickOnLoot(int index) {
-        if (_gameModel.GamePhase != GamePhase.Tile || _gameModel.MapModel.GetCurrentTile().TileType != TileType.Loot)
+        if (!IsLootPhase())
             return;
 
         _connectionManager.SendMessage(MessageType.TakeLoot, index);
+    }
+
+    public void LootTaken(int index) {
+        if (!IsLootPhase())
+            return;
+
+        _viewLoot.LootTaken(index);
     }
 
 

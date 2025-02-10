@@ -12,9 +12,8 @@ public class ViewLoot : ViewWildBurntBasic {
     #endregion
 
 
-    protected override void Awake() {
+    private void Awake() {
         _items = new List<ItemView>();
-        base.Awake();
     }
 
 
@@ -56,6 +55,10 @@ public class ViewLoot : ViewWildBurntBasic {
         item.SetInteractable(true);
 
         return item;
+    }
+
+    public void LootTaken(int index) {
+        _items[index].SetInteractable(false);
     }
 
 

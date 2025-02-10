@@ -1,43 +1,75 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class CharacterView : SubManager {
-    [SerializeField] private UIButtonToggle[] _inventoryButtons;
+    [SerializeField] private UIButtonTab[] _characterButtons;
     [SerializeField] private RectTransform _inventoryView;
+    [SerializeField] private RectTransform _statView;
     [SerializeField] private GameObject _prefab;
 
     private Vector2 _initMin;
     private Vector2 _initMax;
 
-    private int _focusIndex = 0;
-    private List<ItemView> _views = new List<ItemView>();
+    private List<ItemView> _views;
+    private int _focusIndex;
+    private bool _shown;
 
 
     private void Awake() {
-        _initMin = _inventoryView.anchorMin;
-        _initMax = _inventoryView.anchorMax;
+        _initMin = _statView.anchorMin;
+        _initMax = _statView.anchorMax;
 
-        _inventoryView.gameObject.SetActive(false);
-        _inventoryView.anchorMax = _initMin;
+        _statView.gameObject.SetActive(false);
+        _statView.anchorMax = _initMin;
 
-        for (int i = 0; i < _inventoryButtons.Length; i++) {
-            _inventoryButtons[i].OnClick.AddListener(ShowInventory);
+        _views = new List<ItemView>();
+        _focusIndex = 0;
+        _shown = false;
+
+        for (int i = 0; i < _characterButtons.Length; i++) {
+            UIButtonTab b = _characterButtons[i];
+            b.SetIndex(i);
+            b.SetSelected(false);
+            b.OnClick.AddListener(Show);
         }
     }
 
 
-    public async void ShowInventory(bool show) {
-        if (show) {
-            _inventoryView.gameObject.SetActive(true);
-            await _inventoryView.DOAnchorMax(_initMax, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
-            UpdateInventoryView();
+    public async void Show(int index) {
+        if (_shown) {
+            _characterButtons[_focusIndex].SetSelected(false);
+            if (index == _focusIndex) {
+                HideAnim();
+            }
+            else {
+                await HideAnim();
+                _characterButtons[index].SetSelected(true);
+                ShowAnim();
+            }
         }
         else {
-            await _inventoryView.DOAnchorMax(_initMin, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
-            _inventoryView.gameObject.SetActive(false);
-            ClearInventoryView();
+            _characterButtons[index].SetSelected(true);
+            ShowAnim();
         }
+
+        _focusIndex = index;
+    }
+
+    private async Task ShowAnim() {
+        _statView.gameObject.SetActive(true);
+        await _statView.DOAnchorMax(_initMax, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
+        UpdateInventoryView();
+        _shown = true;
+    }
+
+    private async Task HideAnim() {
+        await _statView.DOAnchorMax(_initMin, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
+        _statView.gameObject.SetActive(false);
+        ClearInventoryView();
+        _shown = false;
     }
 
     public void UpdateInventoryView() {

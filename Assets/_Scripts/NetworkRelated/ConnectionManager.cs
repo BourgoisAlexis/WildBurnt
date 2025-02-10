@@ -172,6 +172,7 @@ public class ConnectionManager : SubManager {
                     int playerId = lootInfos[1];
                     int itemID = lootInfos[2];
                     _gameModel.LootTaken(playerId, lootIndex, itemID);
+                    _gameView.LootTaken(lootIndex);
                 }
                 break;
 
