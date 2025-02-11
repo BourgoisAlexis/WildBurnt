@@ -12,6 +12,8 @@ public class ItemView : UIButtonAbstract<UnityEvent<int>> {
         _model = itemModel;
         _index = index;
         _text.text = itemModel.Id.ToString();
+
+        SetInteractable(itemModel.Id >= 0);
     }
 
     public override void OnPointerClick(PointerEventData eventData) {

@@ -2233,8 +2233,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b5781e4ed569744b900f401d91d51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _logSentMessages: 0
-  _logReceivedMessages: 0
+  _logSentMessages: 1
+  _logReceivedMessages: 1
   _guest: {fileID: 0}
   _host: 0
 --- !u!114 &4224726880552635713

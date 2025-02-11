@@ -24,4 +24,10 @@ public enum MessageType {
     AddLoots,
     TakeLoot,
     LootTaken,
+
+    //Gear
+    EquipGear,
+    GearEquiped,
+    UnequipGear,
+    GearUnequiped,
 }

@@ -83,9 +83,10 @@ public class ConnectionManager : SubManager {
 
         switch (message.MessageType) {
             //Connection
-            case MessageType.AskForID:
-                int playerID = _gameModel.CreatePlayer();
-                SendMessage(MessageType.GiveID, playerID);
+            case MessageType.AskForID: {
+                    int playerId = _gameModel.CreatePlayer();
+                    SendMessage(MessageType.GiveID, playerId);
+                }
                 break;
 
             case MessageType.GiveID:
@@ -162,7 +163,7 @@ public class ConnectionManager : SubManager {
                     int lootIndex = int.Parse(message.Message);
                     ItemModel itemModel = _gameModel.LootModel.TakeLoot(lootIndex);
                     if (itemModel.Id != GameUtilsAndConsts.EMPTY_ITEM)
-                        SendMessage(MessageType.LootTaken, JsonUtility.ToJson(new JSONableArray<int>(new int[] { lootIndex, message.SenderID, itemModel.Id})));
+                        SendMessage(MessageType.LootTaken, JsonUtility.ToJson(new JSONableArray<int>(new int[] { lootIndex, message.SenderID, itemModel.Id })));
                 }
                 break;
 
@@ -176,6 +177,25 @@ public class ConnectionManager : SubManager {
                 }
                 break;
 
+
+            //Gear
+            case MessageType.EquipGear: {
+                    int index = int.Parse(message.Message);
+                    int playerId = message.SenderID;
+                    PlayerModel playerModel = _gameModel.PlayerModels[playerId];
+                    if (playerModel.Inventory[index] >= 0) {
+                        playerModel.AddItemToGears(index);
+                        string json = JsonUtility.ToJson(_gameModel.PlayerModels[playerId]);
+                        SendMessage(MessageType.GearEquiped, json);
+                    }
+                }
+                break;
+
+            case MessageType.GearEquiped: {
+                    PlayerModel updatedModel = JsonUtility.FromJson<PlayerModel>(message.Message);
+                    _gameModel.PlayerModels[updatedModel.Id].UpdateInventory(updatedModel);
+                }
+                break;
 
             //Default
             case MessageType.Default:

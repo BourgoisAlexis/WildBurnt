@@ -14,9 +14,6 @@ public class GameView : SubManager {
     [Header("SubViews")]
     [SerializeField] private CoinView _coinView;
     [SerializeField] private TransitionView _transitionView;
-
-    private ConnectionManager _connectionManager => _manager.ConnectionManager;
-    private GameModel _gameModel => _manager.GameModel;
     #endregion
 
 

@@ -27,7 +27,9 @@ public static class GameUtilsAndConsts {
 
         MessageType.Ready,
 
+        //Actions
         MessageType.TakeLoot,
+        MessageType.EquipGear,
     };
 
 
