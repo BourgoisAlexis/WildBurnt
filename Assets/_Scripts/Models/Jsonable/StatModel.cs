@@ -15,6 +15,14 @@ public struct StatModel {
         Magic = magic;
     }
 
+    public StatModel(StatModel model) {
+        MaxHealth = model.MaxHealth;
+        CurrentHealth = model.CurrentHealth;
+        Strength = model.Strength;
+        Magic = model.Magic;
+    }
+
+
     public static StatModel operator +(StatModel a, StatModel b) {
         StatModel result = new StatModel(
             a.MaxHealth + b.MaxHealth,

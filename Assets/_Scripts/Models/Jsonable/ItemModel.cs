@@ -15,4 +15,8 @@ public struct ItemModel {
         Id = scriptable.Id;
         StatModel = scriptable.StatModel;
     }
+
+    public static ItemModel Empty() {
+        return new ItemModel(GameUtilsAndConsts.EMPTY_ITEM, new StatModel(0, 0, 0, 0));
+    }
 }

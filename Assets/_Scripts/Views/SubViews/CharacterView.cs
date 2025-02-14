@@ -2,13 +2,14 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class CharacterView : SubManager {
+    #region Variables
     [SerializeField] private RectTransform _parentView;
     [SerializeField] private UIButtonTab[] _characterButtons;
     [SerializeField] private RectTransform _inventoryView;
     [SerializeField] private RectTransform _gearsView;
+    [SerializeField] private StatView _statView;
     [SerializeField] private GameObject _prefab;
 
     private Vector2 _initMin;
@@ -17,6 +18,7 @@ public class CharacterView : SubManager {
     private List<ItemView> _itemViews;
     private int _focusIndex;
     private bool _shown;
+    #endregion
 
 
     private void Awake() {
@@ -61,10 +63,11 @@ public class CharacterView : SubManager {
 
     private async Task ShowAnim() {
         _parentView.gameObject.SetActive(true);
+        CharacterModel characterModel = _manager.GameModel.PlayerModels[_focusIndex].CharacterModel;
+        _statView.DisplayStats(characterModel.GetStats());
         await _parentView.DOAnchorMax(_initMax, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
-        PlayerModel playerModel = _manager.GameModel.PlayerModels[_focusIndex];
-        FillViewPart(_inventoryView, playerModel.Inventory);
-        FillViewPart(_gearsView, playerModel.Gears);
+        FillViewPart(_inventoryView, characterModel.Inventory);
+        FillViewPart(_gearsView, characterModel.Gears);
         _shown = true;
     }
 

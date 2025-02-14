@@ -40,6 +40,9 @@ public class DataLoader : MonoBehaviour {
     }
 
     public ItemModel LoadItemModel(int id) {
+        if (id == GameUtilsAndConsts.EMPTY_ITEM)
+            return ItemModel.Empty();
+
         ItemScriptable item = Array.Find(ItemScriptables, x => x.Id == id);
         return new ItemModel(item);
     }

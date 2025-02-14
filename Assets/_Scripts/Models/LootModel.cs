@@ -17,7 +17,7 @@ public class LootModel {
 
     public ItemModel TakeLoot(int index) {
         ItemModel result = ItemModels[index];
-        ItemModels[index] = new ItemModel(GameUtilsAndConsts.EMPTY_ITEM, new StatModel(0, 0, 0, 0));
+        ItemModels[index] = ItemModel.Empty();
         return result;
     }
 

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 2
   StatModel:
-    <MaxHealth>k__BackingField: 0
-    <CurrentHealth>k__BackingField: 3
-    <Strength>k__BackingField: 0
-    <Magic>k__BackingField: 0
+    MaxHealth: 0
+    CurrentHealth: 2
+    Strength: 0
+    Magic: 0

@@ -183,8 +183,9 @@ public class ConnectionManager : SubManager {
                     int index = int.Parse(message.Message);
                     int playerId = message.SenderID;
                     PlayerModel playerModel = _gameModel.PlayerModels[playerId];
-                    if (playerModel.Inventory[index] >= 0) {
-                        playerModel.AddItemToGears(index);
+                    CharacterModel characterModel = playerModel.CharacterModel;
+                    if (characterModel.Inventory[index] >= 0) {
+                        characterModel.AddItemToGears(index);
                         string json = JsonUtility.ToJson(_gameModel.PlayerModels[playerId]);
                         SendMessage(MessageType.GearEquiped, json);
                     }
@@ -193,7 +194,7 @@ public class ConnectionManager : SubManager {
 
             case MessageType.GearEquiped: {
                     PlayerModel updatedModel = JsonUtility.FromJson<PlayerModel>(message.Message);
-                    _gameModel.PlayerModels[updatedModel.Id].UpdateInventory(updatedModel);
+                    _gameModel.PlayerModels[updatedModel.Id].CharacterModel.UpdateInventory(updatedModel.CharacterModel);
                 }
                 break;
 

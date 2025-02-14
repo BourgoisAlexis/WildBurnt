@@ -72,6 +72,6 @@ public class GameModel {
 
     public void LootTaken(int playerID, int lootIndex, int itemID) {
         LootModel.TakeLoot(lootIndex);
-        PlayerModels[playerID].AddItemToInventory(itemID);
+        PlayerModels[playerID].CharacterModel.AddItemToInventory(itemID);
     }
 }
