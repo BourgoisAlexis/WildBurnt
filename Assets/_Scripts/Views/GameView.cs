@@ -79,8 +79,8 @@ public class GameView : SubManager {
         return (_gameModel.GamePhase == GamePhase.Tile && _gameModel.MapModel.GetCurrentTile().TileType == TileType.Loot);
     }
 
-    public void AddLoots(ItemModel[] itemModels) {
-        _viewLoot.AddLoots(itemModels);
+    public void AddLoots(int[] itemIds) {
+        _viewLoot.AddLoots(itemIds);
     }
 
     public void ClickOnLoot(int index) {

@@ -2,8 +2,8 @@ public enum MessageType {
     Default,
 
     //Connection
-    AskForID,
-    GiveID,
+    AskForId,
+    GiveId,
 
     //Game
     SetGamePhase,

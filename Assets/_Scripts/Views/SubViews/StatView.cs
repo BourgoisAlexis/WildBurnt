@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class StatView : UIElement {
+public class StatView : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI _tmproHealth;
     [SerializeField] private TextMeshProUGUI _tmproStrength;
     [SerializeField] private TextMeshProUGUI _tmproMagic;

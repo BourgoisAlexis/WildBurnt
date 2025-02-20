@@ -1,40 +1,33 @@
 public class LootModel {
-    public ItemModel[] ItemModels { get; private set; }
+    public int[] ItemIds { get; private set; }
     public WeightedGenerator WeightedGenerator { get; private set; }
 
     private int _numberofItems = 4;
+    //Trouver une meilleure solution pour la length des items possibles
 
 
     public LootModel() {
-        ItemModels = new ItemModel[0];
+        ItemIds = new int[0];
         WeightedGenerator = new WeightedGenerator(_numberofItems, 1);
     }
 
 
-    public void AddLoots(ItemModel[] itemModels) {
-        ItemModels = itemModels;
+    public void AddLoots(int[] itemIds) {
+        ItemIds = itemIds;
     }
 
-    public ItemModel TakeLoot(int index) {
-        ItemModel result = ItemModels[index];
-        ItemModels[index] = ItemModel.Empty();
+    public int TakeLoot(int index) {
+        int result = ItemIds[index];
+        ItemIds[index] = GameUtilsAndConsts.EMPTY_ITEM;
+
         return result;
     }
 
 
-    public ItemModel[] CreateItemSet() {
+    public int[] CreateItemSet() {
         int rowSize = UnityEngine.Random.Range(2, 6);
         int[] array = WeightedGenerator.GenerateArray(rowSize);
-        ItemModel[] result = new ItemModel[rowSize];
 
-        for (int i = 0; i < rowSize; i++)
-            result[i] = CreateRandomItem(array[i]);
-
-        return result;
-    }
-
-    private ItemModel CreateRandomItem(int i) {
-        int r = UnityEngine.Random.Range(0, DataLoader.Instance.ItemScriptables.Length);
-        return DataLoader.Instance.LoadItemModel(r);
+        return array;
     }
 }

@@ -25,29 +25,15 @@ public class MapModel {
 
         for (int i = 0; i < rowSize; i++)
             result[i] = new TileModel(TileType.Loot);
-        //result[i] = new TileModel((TileType)array[i]);
 
-        NetworkUtilsAndConsts.Log($"-Generating only loots atm-");
+        NetworkUtilsAndConsts.Log($"-Generating only loot tiles atm-");
+        //result[i] = new TileModel((TileType)array[i]);
 
         return result;
     }
 
     public void AddTileRow(TileModel[] tileDatas) {
         TileRows.Add(tileDatas);
-
-        StringBuilder sb = new StringBuilder();
-        foreach (TileModel[] row in TileRows) {
-            string s = string.Empty;
-            for (int i = 0; i < row.Length; i++) {
-                TileModel tileModel = row[i];
-                s += tileModel.TileType;
-                if (i < row.Length - 1)
-                    s += "-";
-            }
-            sb.AppendLine(s);
-        }
-
-        NetworkUtilsAndConsts.Log(sb.ToString());
     }
 
     public void MoveToTile(VoteResult result) {
@@ -60,12 +46,12 @@ public class MapModel {
 
 
     //Votes
-    public void AddPlayer() {
+    public void CreatePlayer() {
         CurrentVote.Add(GameUtilsAndConsts.EMPTY_VOTE);
     }
 
-    public void UpdateVotes(int playerID, int value, out List<int> result) {
-        CurrentVote[playerID] = value;
+    public void UpdateVotes(int playerId, int value, out List<int> result) {
+        CurrentVote[playerId] = value;
         result = CurrentVote;
     }
 
@@ -77,19 +63,19 @@ public class MapModel {
         List<int> voteResults = CurrentVote.GroupBy(n => n).Where(g => g.Count() == maxCount).Select(g => g.Key).ToList();
         voteResults = voteResults.Select(n => n).Where(n => n != GameUtilsAndConsts.EMPTY_VOTE).ToList();
 
-        if (voteResults.Count > 1) {
+        if (voteResults.Count == 1) {
+            int index = voteResults.First();
+            result = new VoteResult(false, index, (int)row[index].TileType);
+        }
+        else if (voteResults.Count > 1) {
             voteResults.Shuffle();
             int index = voteResults.First();
             result = new VoteResult(true, index, (int)row[index].TileType);
         }
-        else if (voteResults.Count <= 0) {
+        else {
             int length = TileRows.Last().Length;
             int r = length > 1 ? UnityEngine.Random.Range(0, length) : 0;
             result = new VoteResult(length > 1, r, (int)row[r].TileType);
-        }
-        else {
-            int index = voteResults.First();
-            result = new VoteResult(false, index, (int)row[index].TileType);
         }
 
         return result;

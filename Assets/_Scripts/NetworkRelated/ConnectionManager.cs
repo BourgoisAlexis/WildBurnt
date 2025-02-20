@@ -2,8 +2,6 @@ using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
 using System.Collections.Generic;
-using System;
-using System.Linq;
 
 
 public class ConnectionManager : SubManager {
@@ -18,11 +16,10 @@ public class ConnectionManager : SubManager {
     private Queue<PeerMessageWildBurnt> _messageQueue;
 
     private bool _sendingMessage = false;
-    private bool _askingForID;
+    private bool _askingForId;
 
-    private int _guestID;
+    private int _guestId;
 
-    private GameModel _gameModel => _manager.GameModel;
     private GameView _gameView => _manager.GameView;
     private CharacterView _characterView => _manager.CharacterView;
     #endregion
@@ -45,7 +42,7 @@ public class ConnectionManager : SubManager {
     public override void Init(GameManager manager, params object[] parameters) {
         base.Init(manager, parameters);
 
-        _gameModel.CreatePlayer();
+        _gameModel.CreatePlayer(out int playerId);
         _connection.Init(OnInit, _host, 1);
         _connection.OnMessageReceived += ReceivedMessage;
     }
@@ -56,16 +53,16 @@ public class ConnectionManager : SubManager {
     }
 
     public void Connect(IPEndPoint iPEndPoint) {
-        _connection.Connect(iPEndPoint, AskForID);
+        _connection.Connect(iPEndPoint, AskForId);
     }
 
 
-    private async void AskForID() {
+    private async void AskForId() {
         int i = 0;
-        _askingForID = true;
+        _askingForId = true;
 
-        while (_askingForID) {
-            SendMessage(MessageType.AskForID);
+        while (_askingForId) {
+            SendMessage(MessageType.AskForId);
 
             await Task.Delay(Mathf.RoundToInt(GameUtilsAndConsts.MESSAGE_DELAY * 10 * 1000));
 
@@ -83,17 +80,18 @@ public class ConnectionManager : SubManager {
 
         switch (message.MessageType) {
             //Connection
-            case MessageType.AskForID: {
-                    int playerId = _gameModel.CreatePlayer();
-                    SendMessage(MessageType.GiveID, playerId);
+            case MessageType.AskForId: {
+                    _gameModel.CreatePlayer(out int playerId);
+                    SendMessage(MessageType.GiveId, playerId);
                 }
                 break;
 
-            case MessageType.GiveID:
-                _askingForID = false;
-                _guestID = int.Parse(message.Message);
-                _gameModel.CreatePlayer();
-                _gameView.ShowMessage($"Got ID : {_guestID}");
+            case MessageType.GiveId: {
+                    _askingForId = false;
+                    _guestId = int.Parse(message.Message);
+                    _gameModel.CreatePlayer(out int playerId);
+                    _gameView.ShowMessage($"Got Id : {_guestId}");
+                }
                 break;
 
 
@@ -106,16 +104,16 @@ public class ConnectionManager : SubManager {
 
             case MessageType.Ready:
                 bool ready = bool.Parse(message.Message);
-                _gameModel.Ready(message.SenderID, ready, out bool everybodyReady);
+                _gameModel.Ready(message.SenderId, ready, out bool everybodyReady);
                 if (everybodyReady && _host)
-                    OnViewLoaded();
+                    OnEverybodyReady();
                 break;
 
 
             //Vote
             case MessageType.Vote:
                 int voteIndex = int.Parse(message.Message);
-                _gameModel.Vote(message.SenderID, voteIndex, out List<int> votes);
+                _gameModel.Vote(message.SenderId, voteIndex, out List<int> votes);
                 _gameView.DisplayVotes(votes);
                 break;
 
@@ -138,7 +136,7 @@ public class ConnectionManager : SubManager {
                 break;
 
             case MessageType.AddTileRow:
-                TileModel[] tileModels = JsonUtility.FromJson<JSONableArray<TileModel>>(message.Message).Array;
+                TileModel[] tileModels = JsonUtility.FromJson<JsonableArray<TileModel>>(message.Message).Values;
                 _gameModel.MapModel.AddTileRow(tileModels);
                 _gameView.AddTileRow(tileModels);
                 //Debug only
@@ -153,27 +151,28 @@ public class ConnectionManager : SubManager {
 
             //Loot
             case MessageType.AddLoots:
-                ItemModel[] itemModels = JsonUtility.FromJson<JSONableArray<ItemModel>>(message.Message).Array;
-                _gameModel.LootModel.AddLoots(itemModels);
-                _gameView.AddLoots(itemModels);
+                int[] itemIds = JsonUtility.FromJson<JsonableArray<int>>(message.Message).Values;
+                _gameModel.LootModel.AddLoots(itemIds);
+                _gameView.AddLoots(itemIds);
                 VoteCountDown();
                 break;
 
             case MessageType.TakeLoot: {
                     int lootIndex = int.Parse(message.Message);
-                    ItemModel itemModel = _gameModel.LootModel.TakeLoot(lootIndex);
-                    if (itemModel.Id != GameUtilsAndConsts.EMPTY_ITEM)
-                        SendMessage(MessageType.LootTaken, JsonUtility.ToJson(new JSONableArray<int>(new int[] { lootIndex, message.SenderID, itemModel.Id })));
+                    int itemId = _gameModel.LootModel.TakeLoot(lootIndex);
+                    if (itemId != GameUtilsAndConsts.EMPTY_ITEM)
+                        SendMessage(MessageType.LootTaken, JsonUtility.ToJson(new JsonableArray<int>(new int[] { lootIndex, message.SenderId, itemId })));
                 }
                 break;
 
             case MessageType.LootTaken: {
-                    int[] lootInfos = JsonUtility.FromJson<JSONableArray<int>>(message.Message).Array;
+                    int[] lootInfos = JsonUtility.FromJson<JsonableArray<int>>(message.Message).Values;
                     int lootIndex = lootInfos[0];
                     int playerId = lootInfos[1];
-                    int itemID = lootInfos[2];
-                    _gameModel.LootTaken(playerId, lootIndex, itemID);
+                    int itemId = lootInfos[2];
+                    _gameModel.LootTaken(playerId, lootIndex, itemId);
                     _gameView.LootTaken(lootIndex);
+                    _characterView.UpdateView(playerId);
                 }
                 break;
 
@@ -181,7 +180,7 @@ public class ConnectionManager : SubManager {
             //Gear
             case MessageType.EquipGear: {
                     int index = int.Parse(message.Message);
-                    int playerId = message.SenderID;
+                    int playerId = message.SenderId;
                     PlayerModel playerModel = _gameModel.PlayerModels[playerId];
                     CharacterModel characterModel = playerModel.CharacterModel;
                     if (characterModel.Inventory[index] >= 0) {
@@ -194,7 +193,8 @@ public class ConnectionManager : SubManager {
 
             case MessageType.GearEquiped: {
                     PlayerModel updatedModel = JsonUtility.FromJson<PlayerModel>(message.Message);
-                    _gameModel.PlayerModels[updatedModel.Id].CharacterModel.UpdateInventory(updatedModel.CharacterModel);
+                    _gameModel.GearEquiped(updatedModel);
+                    _characterView.UpdateView(updatedModel.Id);
                 }
                 break;
 
@@ -206,7 +206,7 @@ public class ConnectionManager : SubManager {
         if (!_host)
             return;
 
-        if (message.SenderID != 0 && !message.IsBroadcasted && !GameUtilsAndConsts.SENT_TO_HOST_ONLY.Contains(message.MessageType))
+        if (message.SenderId != 0 && !message.IsBroadcasted && !GameUtilsAndConsts.SENT_TO_HOST_ONLY.Contains(message.MessageType))
             Broadcast(message);
     }
 
@@ -220,7 +220,7 @@ public class ConnectionManager : SubManager {
     }
 
     public void SendMessage(MessageType messageType, string content = "Empty") {
-        PeerMessageWildBurnt m = new PeerMessageWildBurnt(_guestID, false, messageType, content);
+        PeerMessageWildBurnt m = new PeerMessageWildBurnt(_guestId, false, messageType, content);
         _messageQueue.Enqueue(m);
     }
 
@@ -262,17 +262,17 @@ public class ConnectionManager : SubManager {
     }
 
 
-    private void OnViewLoaded() {
+    private void OnEverybodyReady() {
         if (_gameModel.GamePhase == GamePhase.Map) {
             TileModel[] tileModels = _gameModel.MapModel.CreateTileRow();
-            string json = JsonUtility.ToJson(new JSONableArray<TileModel>(tileModels));
+            string json = JsonUtility.ToJson(new JsonableArray<TileModel>(tileModels));
             SendMessage(MessageType.AddTileRow, json);
         }
         else if (_gameModel.GamePhase == GamePhase.Tile) {
             TileModel tileModel = _gameModel.MapModel.GetCurrentTile();
             if (tileModel.TileType == TileType.Loot) {
-                ItemModel[] itemModels = _gameModel.LootModel.CreateItemSet();
-                string json = JsonUtility.ToJson(new JSONableArray<ItemModel>(itemModels));
+                int[] itemIds = _gameModel.LootModel.CreateItemSet();
+                string json = JsonUtility.ToJson(new JsonableArray<int>(itemIds));
                 SendMessage(MessageType.AddLoots, json);
             }
         }

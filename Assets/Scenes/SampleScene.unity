@@ -1421,6 +1421,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1948765548}
   m_CullTransparentMesh: 1
+--- !u!114 &2096827459 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4704877298747940603, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+  m_PrefabInstance: {fileID: 6061505981043433252}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2117413139
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,6 +1569,10 @@ PrefabInstance:
       propertyPath: _guest
       value: 
       objectReference: {fileID: 1499877546}
+    - target: {fileID: 1435629856484174581, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: _uiDatas.Icon
+      value: 
+      objectReference: {fileID: 2096827459}
     - target: {fileID: 8343354234357578714, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

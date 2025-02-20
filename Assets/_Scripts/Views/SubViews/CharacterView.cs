@@ -50,20 +50,30 @@ public class CharacterView : SubManager {
             else {
                 await HideAnim();
                 _characterButtons[index].SetSelected(true);
-                ShowAnim();
+                ShowAnim(index);
             }
         }
         else {
             _characterButtons[index].SetSelected(true);
-            ShowAnim();
+            ShowAnim(index);
         }
 
         _focusIndex = index;
     }
 
-    private async Task ShowAnim() {
+    public void UpdateView(int index) {
+        if (index == _focusIndex && _shown) {
+            ClearInventoryView();
+            CharacterModel characterModel = _manager.GameModel.PlayerModels[_focusIndex].CharacterModel;
+            _statView.DisplayStats(characterModel.GetStats());
+            FillViewPart(_inventoryView, characterModel.Inventory);
+            FillViewPart(_gearsView, characterModel.Gears);
+        }
+    }
+
+    private async Task ShowAnim(int index) {
         _parentView.gameObject.SetActive(true);
-        CharacterModel characterModel = _manager.GameModel.PlayerModels[_focusIndex].CharacterModel;
+        CharacterModel characterModel = _manager.GameModel.PlayerModels[index].CharacterModel;
         _statView.DisplayStats(characterModel.GetStats());
         await _parentView.DOAnchorMax(_initMax, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
         FillViewPart(_inventoryView, characterModel.Inventory);

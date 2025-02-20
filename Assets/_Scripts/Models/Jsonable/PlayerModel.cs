@@ -10,6 +10,7 @@ public struct PlayerModel {
     public PlayerModel(int id) {
         Id = id;
         UserName = $"Player_{id}";
-        CharacterModel = new CharacterModel(new EntityModel(new StatModel(10, 5, 5, 5)));
+        StatModel stats = new StatModel(10, 5, 5, 5);
+        CharacterModel = new CharacterModel(stats);
     }
 }

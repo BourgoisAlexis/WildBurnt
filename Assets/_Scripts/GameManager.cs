@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < GameUtilsAndConsts.SHOWING_ROWS; i++) {
             TileModel[] tileModels = GameModel.MapModel.CreateTileRow();
 
-            string json = JsonUtility.ToJson(new JSONableArray<TileModel>(tileModels));
+            string json = JsonUtility.ToJson(new JsonableArray<TileModel>(tileModels));
             ConnectionManager.SendMessage(MessageType.AddTileRow, json);
 
             await Task.Delay(1000);

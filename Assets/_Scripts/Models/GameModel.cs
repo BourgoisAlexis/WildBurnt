@@ -10,29 +10,31 @@ public class GameModel {
     public List<bool> Readys { get; private set; }
     public MapModel MapModel { get; private set; }
     public LootModel LootModel { get; private set; }
+    //public FightModel FightModel { get; private set; }
     #endregion
 
 
     public GameModel() {
+        GamePhase = new GamePhase();
         PlayerModels = new List<PlayerModel>();
         Readys = new List<bool>();
-        GamePhase = new GamePhase();
         MapModel = new MapModel();
         LootModel = new LootModel();
     }
 
 
-    public int CreatePlayer() {
+    public void CreatePlayer(out int lastPlayerId) {
         PlayerModels.Add(new PlayerModel(PlayerModels.Count));
         Readys.Add(false);
 
-        MapModel.AddPlayer();
+        MapModel.CreatePlayer();
 
-        return PlayerModels.Count - 1;
+        lastPlayerId = PlayerModels.Count - 1;
     }
 
-    public void Ready(int playerID, bool value, out bool result) {
-        Readys[playerID] = value;
+
+    public void Ready(int playerId, bool value, out bool result) {
+        Readys[playerId] = value;
         result = Readys.FindAll(b => b == false).Count == 0;
     }
 
@@ -41,17 +43,14 @@ public class GameModel {
             Readys[i] = false;
     }
 
-    public void SetGamePhase(GamePhase gamePhase) {
-        GamePhase = gamePhase;
-    }
 
-
-    public void Vote(int playerID, int value, out List<int> result) {
+    public void Vote(int playerId, int value, out List<int> result) {
         if (GamePhase == GamePhase.Map) {
-            MapModel.UpdateVotes(playerID, value, out result);
+            MapModel.UpdateVotes(playerId, value, out result);
             return;
         }
 
+        NetworkUtilsAndConsts.LogError("Trying to get votes out of GamePhase.Map");
         result = new List<int>();
         foreach (PlayerModel player in PlayerModels)
             result.Add(GameUtilsAndConsts.EMPTY_VOTE);
@@ -70,8 +69,18 @@ public class GameModel {
     }
 
 
-    public void LootTaken(int playerID, int lootIndex, int itemID) {
+    public void SetGamePhase(GamePhase gamePhase) {
+        GamePhase = gamePhase;
+    }
+
+
+    public void LootTaken(int playerId, int lootIndex, int itemId) {
         LootModel.TakeLoot(lootIndex);
-        PlayerModels[playerID].CharacterModel.AddItemToInventory(itemID);
+        PlayerModels[playerId].CharacterModel.AddItemToInventory(itemId);
+    }
+
+
+    public void GearEquiped(PlayerModel updatedModel) {
+        PlayerModels[updatedModel.Id].CharacterModel.UpdateInventory(updatedModel.CharacterModel);
     }
 }

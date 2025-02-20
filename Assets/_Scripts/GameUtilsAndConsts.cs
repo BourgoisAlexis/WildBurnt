@@ -14,14 +14,14 @@ public static class GameUtilsAndConsts {
     public static List<MessageType> SENT_TO_GUEST_ONLY = new List<MessageType> {
         MessageType.Default,
 
-        MessageType.GiveID,
+        MessageType.GiveId,
     };
 
     //These are the messages used to update the gameModel on host side
     //As long as we don't display anything on update we don't need to send them to guests
     //But they can be sent by the host to itself
     public static List<MessageType> SENT_TO_HOST_ONLY = new List<MessageType> {
-        MessageType.AskForID,
+        MessageType.AskForId,
 
         MessageType.VoteEnd,
 

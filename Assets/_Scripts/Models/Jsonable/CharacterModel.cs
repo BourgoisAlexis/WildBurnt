@@ -2,13 +2,13 @@ using System;
 
 [Serializable]
 public struct CharacterModel {
-    public EntityModel EntityModel;
+    public StatModel StatModel;
     public int[] Inventory;
     public int[] Gears;
 
 
-    public CharacterModel(EntityModel entityModel, int inventorySize = 5) {
-        EntityModel = entityModel;
+    public CharacterModel(StatModel statModel, int inventorySize = 5) {
+        StatModel = statModel;
         Inventory = new int[5];
         Gears = new int[4];
         Array.Fill(Inventory, GameUtilsAndConsts.EMPTY_ITEM);
@@ -16,10 +16,10 @@ public struct CharacterModel {
     }
 
 
-    public void AddItemToInventory(int itemID) {
+    public void AddItemToInventory(int itemId) {
         for (int i = 0; i < Inventory.Length; i++) {
             if (Inventory[i] == GameUtilsAndConsts.EMPTY_ITEM) {
-                Inventory[i] = itemID;
+                Inventory[i] = itemId;
                 return;
             }
         }
@@ -42,7 +42,7 @@ public struct CharacterModel {
     }
 
     public StatModel GetStats() {
-        StatModel result = new StatModel(EntityModel.StatModel);
+        StatModel result = StatModel;
 
         foreach (int i in Gears) {
             ItemModel item = DataLoader.Instance.LoadItemModel(i);

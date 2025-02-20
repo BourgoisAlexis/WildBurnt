@@ -24,10 +24,10 @@ public class ViewLoot : ViewWildBurntBasic {
         _items.Clear();
     }
 
-    public void AddLoots(ItemModel[] itemModels) {
+    public void AddLoots(int[] itemIds) {
         Clear();
 
-        int size = itemModels.Length;
+        int size = itemIds.Length;
 
         Vector2 midSize = _rectTransform.rect.size;
         float ratio = _top.anchorMin.y - _bot.anchorMax.y;
@@ -39,7 +39,7 @@ public class ViewLoot : ViewWildBurntBasic {
 
         for (int i = 0; i < size; i++) {
             Vector2 pos = new Vector2(i * stepH - offsetH, 0);
-            _items.Add(AddSingleItem(pos, itemModels[i], i));
+            _items.Add(AddSingleItem(pos, DataLoader.Instance.LoadItemModel(itemIds[i]), i));
         }
     }
 
