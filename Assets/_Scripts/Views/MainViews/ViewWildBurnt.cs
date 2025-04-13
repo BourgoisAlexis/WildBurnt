@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-public class ViewWildBurntBasic : UIView {
+public class ViewWildBurnt : UIView {
     protected GameView _gameView;
 
     public override void Init(params object[] parameters) {

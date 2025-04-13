@@ -8,7 +8,7 @@ public enum MessageType {
     //Game
     SetGamePhase,
     Ready,
-    EveryOneReady,
+    EveryoneReady,
 
     //Vote
     Vote,

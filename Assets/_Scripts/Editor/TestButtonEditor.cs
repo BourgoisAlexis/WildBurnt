@@ -12,7 +12,7 @@ public class TestButtonEditor : Editor {
 
         if (GUILayout.Button("Reset")) {
             TestButton b = target as TestButton;
-            b.R();
+            b.ResetTest();
         }
     }
 }

@@ -11,6 +11,7 @@ public class GameView : SubManager {
     [SerializeField] private UIViewManager _viewManager;
     [SerializeField] private ViewMap _viewMap;
     [SerializeField] private ViewLoot _viewLoot;
+    [SerializeField] private ViewFight _viewFight;
     [Header("SubViews")]
     [SerializeField] private CoinView _coinView;
     [SerializeField] private TransitionView _transitionView;
@@ -76,7 +77,7 @@ public class GameView : SubManager {
 
     //Loot
     private bool IsLootPhase() {
-        return (_gameModel.GamePhase == GamePhase.Tile && _gameModel.MapModel.GetCurrentTile().TileType == TileType.Loot);
+        return _gameModel.GamePhase == GamePhase.Tile && _gameModel.MapModel.GetCurrentTile().TileType == TileType.Loot;
     }
 
     public void AddLoots(int[] itemIds) {
@@ -95,6 +96,12 @@ public class GameView : SubManager {
             return;
 
         _viewLoot.LootTaken(index);
+    }
+
+
+    //Fight
+    private bool IsFightPhase() {
+        return _gameModel.GamePhase == GamePhase.Tile && _gameModel.MapModel.GetCurrentTile().TileType == TileType.Fight;
     }
 
 

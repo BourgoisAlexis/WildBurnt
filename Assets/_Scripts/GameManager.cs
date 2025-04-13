@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
+
 public class GameManager : MonoBehaviour {
     [field: SerializeField] public ConnectionManager ConnectionManager { get; private set; }
     [field: SerializeField] public GameView GameView { get; private set; }

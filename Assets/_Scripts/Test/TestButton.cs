@@ -13,14 +13,14 @@ public class TestButton : MonoBehaviour {
     private WeightedGenerator _generator;
 
 
-    public void R() {
+    public void ResetTest() {
         _generator = new WeightedGenerator(Enum.GetNames(typeof(TileType)).Count(), WeightStep);
 
         Tiles.Clear();
     }
 
     public void Test() {
-        R();
+        ResetTest();
         int[] array = _generator.GenerateArray(Size);
 
         foreach (int i in array)

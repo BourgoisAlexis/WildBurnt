@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ViewLoot : ViewWildBurntBasic {
+
+public class ViewLoot : ViewWildBurnt {
     #region Variables
     [SerializeField] private RectTransform _top;
     [SerializeField] private RectTransform _bot;

@@ -20,7 +20,7 @@ public class WeightedGenerator {
     }
 
 
-    public int[] GenerateArray(int n) {
+    public int[] GenerateArray(int size) {
         List<int> result = new List<int>();
 
         _totals = new float[_size];
@@ -31,7 +31,7 @@ public class WeightedGenerator {
             _totals[i] = total;
         }
 
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < size; i++)
             result.Add(PickARandom());
 
         return result.ToArray();

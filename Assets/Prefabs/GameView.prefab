@@ -1169,7 +1169,7 @@ GameObject:
   - component: {fileID: 4865341749807757710}
   - component: {fileID: 4438259054275831873}
   - component: {fileID: 2701599372460996664}
-  - component: {fileID: 4621097532807129758}
+  - component: {fileID: 7240850917511452297}
   m_Layer: 5
   m_Name: ViewShop
   m_TagString: Untagged
@@ -1235,7 +1235,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4621097532807129758
+--- !u!114 &7240850917511452297
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1244,7 +1244,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6236350531727854249}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5459fdbff68397042a9a795d910456ea, type: 3}
+  m_Script: {fileID: 11500000, guid: 21fcca01b5631814594f5574f3dfd4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _uiStyle: {fileID: 11400000, guid: e18316c9e63b2e04995d946ec850fb82, type: 2}
@@ -1401,7 +1401,7 @@ GameObject:
   - component: {fileID: 4376765150068857340}
   - component: {fileID: 7393451637305742177}
   - component: {fileID: 6804031109119541814}
-  - component: {fileID: 8346204942840958309}
+  - component: {fileID: 1126895437387356782}
   m_Layer: 5
   m_Name: ViewEvent
   m_TagString: Untagged
@@ -1467,7 +1467,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8346204942840958309
+--- !u!114 &1126895437387356782
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1476,7 +1476,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7178982795062239405}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5459fdbff68397042a9a795d910456ea, type: 3}
+  m_Script: {fileID: 11500000, guid: 21fcca01b5631814594f5574f3dfd4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _uiStyle: {fileID: 11400000, guid: e18316c9e63b2e04995d946ec850fb82, type: 2}
@@ -1572,7 +1572,7 @@ GameObject:
   - component: {fileID: 7986318340522322821}
   - component: {fileID: 7450076263370616801}
   - component: {fileID: 7855645597944154922}
-  - component: {fileID: 6973004898647066966}
+  - component: {fileID: 8527747363301084852}
   m_Layer: 5
   m_Name: ViewFight
   m_TagString: Untagged
@@ -1638,7 +1638,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6973004898647066966
+--- !u!114 &8527747363301084852
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1647,7 +1647,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7964040083162343048}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5459fdbff68397042a9a795d910456ea, type: 3}
+  m_Script: {fileID: 11500000, guid: 528c79059c553274882a7f92a07a2c40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _uiStyle: {fileID: 11400000, guid: e18316c9e63b2e04995d946ec850fb82, type: 2}
@@ -2253,6 +2253,7 @@ MonoBehaviour:
   _viewManager: {fileID: 5849871859627126344}
   _viewMap: {fileID: 4936871731342938282}
   _viewLoot: {fileID: 7641301117313006181}
+  _viewFight: {fileID: 0}
   _coinView: {fileID: 7880688873959525589}
   _transitionView: {fileID: 407208323591678964}
 --- !u!114 &5849871859627126344
@@ -2269,10 +2270,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _views:
   - {fileID: 4936871731342938282}
-  - {fileID: 6973004898647066966}
+  - {fileID: 8527747363301084852}
   - {fileID: 7641301117313006181}
-  - {fileID: 4621097532807129758}
-  - {fileID: 8346204942840958309}
+  - {fileID: 7240850917511452297}
+  - {fileID: 1126895437387356782}
   _tabs: []
 --- !u!1001 &6926523599210523608
 PrefabInstance:

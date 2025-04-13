@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 
 public class MapModel {
+    #region Variables
     public List<TileModel[]> TileRows { get; private set; }
     public int CurrentTileIndex { get; private set; }
     public List<int> CurrentVote { get; private set; }
     public WeightedGenerator WeightedGenerator { get; private set; }
+    #endregion
 
 
     public MapModel() {
@@ -21,13 +23,7 @@ public class MapModel {
     public TileModel[] CreateTileRow() {
         int rowSize = UnityEngine.Random.Range(1, 5);
         int[] array = WeightedGenerator.GenerateArray(rowSize);
-        TileModel[] result = new TileModel[rowSize];
-
-        for (int i = 0; i < rowSize; i++)
-            result[i] = new TileModel(TileType.Loot);
-
-        NetworkUtilsAndConsts.Log($"-Generating only loot tiles atm-");
-        //result[i] = new TileModel((TileType)array[i]);
+        TileModel[] result = array.Select(x => new TileModel(TileType.Fight)).ToArray();
 
         return result;
     }

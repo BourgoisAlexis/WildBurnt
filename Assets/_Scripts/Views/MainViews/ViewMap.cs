@@ -1,8 +1,8 @@
-using DG.Tweening;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
-public class ViewMap : ViewWildBurntBasic {
+public class ViewMap : ViewWildBurnt {
     #region Variables
     [SerializeField] private RectTransform _top;
     [SerializeField] private RectTransform _bot;

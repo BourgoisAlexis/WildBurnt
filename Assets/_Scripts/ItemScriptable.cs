@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 [CreateAssetMenu(menuName = "WildBurnt/Item", fileName = "New Item")]
 public class ItemScriptable : ScriptableObject {
     public int Id;
