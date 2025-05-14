@@ -30,4 +30,7 @@ public enum MessageType {
     GearEquiped,
     UnequipGear,
     GearUnequiped,
+
+    //Fight
+    UseAbility,
 }

@@ -6,9 +6,9 @@ using UnityEngine;
 public class SimpleTweenSettings {
     public float Duration;
     public AnimationCurve Ease;
-    public Transform t;
 
     public SimpleTweenSettings() {
+        Duration = 0.15f;
         Ease = new AnimationCurve();
         Ease.keys = new Keyframe[] {
             new Keyframe(0, 0),

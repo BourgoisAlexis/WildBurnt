@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class TileView : UIButtonAbstract<UnityEvent<int>> {
     #region Variables
-    [SerializeField] Image _highlight;
+    [SerializeField] private Image _highlight;
     [SerializeField] private List<GameObject> _voteSpots;
 
     private TileModel _model;
@@ -34,8 +34,8 @@ public class TileView : UIButtonAbstract<UnityEvent<int>> {
     }
 
     public void Highlight(bool highlight) {
-        Color color = highlight ? _uiStyle.Light.SetAlpha(0.5f) : _uiStyle.Light.SetAlpha(0f);
-        _highlight.DOColor(color, UIUtilsAndConsts.ANIM_DURATION);
+        Color targetColor = highlight ? _uiStyle.Light.SetAlpha(0.5f) : _uiStyle.Light.SetAlpha(0f);
+        HomeTween.TweenColor(_highlight, targetColor, _tweenSettings);
     }
 
     public override void OnPointerClick(PointerEventData eventData) {

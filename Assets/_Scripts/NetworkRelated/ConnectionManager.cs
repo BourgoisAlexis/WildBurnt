@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
-using System.Collections.Generic;
 
 
 public class ConnectionManager : SubManager {
@@ -236,6 +236,7 @@ public class ConnectionManager : SubManager {
 
             PeerMessageWildBurnt m = _messageQueue.Dequeue();
 
+            //Tip to myself : if you have any doubt check how EquipGear message works
             if (_host) {
                 if (!GameUtilsAndConsts.SENT_TO_HOST_ONLY.Contains(m.MessageType))
                     await _connection.SendMessageTask(m);

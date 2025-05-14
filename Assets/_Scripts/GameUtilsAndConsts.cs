@@ -1,5 +1,5 @@
-using DG.Tweening;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public static class GameUtilsAndConsts {
@@ -30,6 +30,7 @@ public static class GameUtilsAndConsts {
         //Actions
         MessageType.TakeLoot,
         MessageType.EquipGear,
+        MessageType.UseAbility,
     };
 
 

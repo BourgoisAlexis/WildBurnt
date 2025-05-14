@@ -1,4 +1,3 @@
-using DG.Tweening;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -75,14 +74,14 @@ public class CharacterView : SubManager {
         _parentView.gameObject.SetActive(true);
         CharacterModel characterModel = _manager.GameModel.PlayerModels[index].CharacterModel;
         _statView.DisplayStats(characterModel.GetStats());
-        await _parentView.DOAnchorMax(_initMax, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
+        await HomeTween.TweenAnchorMax(_parentView, _initMax, new SimpleTweenSettings());
         FillViewPart(_inventoryView, characterModel.Inventory);
         FillViewPart(_gearsView, characterModel.Gears);
         _shown = true;
     }
 
     private async Task HideAnim() {
-        await _parentView.DOAnchorMax(_initMin, UIUtilsAndConsts.ANIM_DURATION).AsyncWaitForCompletion();
+        await HomeTween.TweenAnchorMin(_parentView, _initMin, new SimpleTweenSettings());
         _parentView.gameObject.SetActive(false);
         ClearInventoryView();
         _shown = false;

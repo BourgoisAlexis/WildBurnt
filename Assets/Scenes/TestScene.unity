@@ -276,7 +276,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  destination: {x: 200, y: 200, z: 0}
+  c: {r: 1, g: 0, b: 0, a: 0.5529412}
 --- !u!114 &247892956
 MonoBehaviour:
   m_ObjectHideFlags: 0
