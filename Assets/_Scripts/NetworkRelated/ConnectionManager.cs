@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -67,7 +69,7 @@ public class ConnectionManager : SubManager {
             await Task.Delay(Mathf.RoundToInt(GameUtilsAndConsts.MESSAGE_DELAY * 10 * 1000));
 
             i++;
-            if (i > 20) {
+            if (i > 20 || !Application.isPlaying) {
                 Debug.LogError("Expired");
                 break;
             }
@@ -159,8 +161,8 @@ public class ConnectionManager : SubManager {
 
             case MessageType.TakeLoot: {
                     int lootIndex = int.Parse(message.Message);
-                    int itemId = _gameModel.LootModel.TakeLoot(lootIndex);
-                    if (itemId != GameUtilsAndConsts.EMPTY_ITEM)
+                    int itemId = _gameModel.LootModel.RemoveLoot(lootIndex);
+                    if (itemId != GameUtilsAndConsts.EMPTY_INT)
                         SendMessage(MessageType.LootTaken, JsonUtility.ToJson(new JsonableArray<int>(new int[] { lootIndex, message.SenderId, itemId })));
                 }
                 break;
@@ -196,6 +198,13 @@ public class ConnectionManager : SubManager {
                     _gameModel.GearEquiped(updatedModel);
                     _characterView.UpdateView(updatedModel.Id);
                 }
+                break;
+
+
+            //Fight
+            case MessageType.CreateFightBoard:
+                JsonableArray<CharacterModel> board = JsonUtility.FromJson<JsonableArray<CharacterModel>>(message.Message);
+                _gameModel.CreateFightBoard(board.GetValues());
                 break;
 
             //Default
@@ -244,7 +253,14 @@ public class ConnectionManager : SubManager {
                     ReceivedMessage(m);
             }
             else if (!GameUtilsAndConsts.SENT_TO_GUEST_ONLY.Contains(m.MessageType)) {
-                await _connection.SendMessageTask(m);
+                try {
+                    await _connection.SendMessageTask(m);
+                }
+                catch (Exception) {
+                    Debug.LogError($"FAILED MESSAGE : {(_host ? "Host" : "Guest")} sent {m.MessageType.ToString()} : {m.ToString()}");
+                    _sendingMessage = false;
+                    return;
+                }
             }
 
             if (_logSentMessages)
@@ -275,6 +291,12 @@ public class ConnectionManager : SubManager {
                 int[] itemIds = _gameModel.LootModel.CreateItemSet();
                 string json = JsonUtility.ToJson(new JsonableArray<int>(itemIds));
                 SendMessage(MessageType.AddLoots, json);
+            }
+            else if (tileModel.TileType == TileType.Fight) {
+                CharacterModel[] players = _gameModel.PlayerModels.Select(x => x.CharacterModel).ToArray();
+                CharacterModel[] mobs = _gameModel.FightModel.CreateMobSet();
+                string json = JsonUtility.ToJson(new JsonableArray<CharacterModel>(new CharacterModel[][] { players, mobs }));
+                SendMessage(MessageType.CreateFightBoard, json);
             }
         }
 

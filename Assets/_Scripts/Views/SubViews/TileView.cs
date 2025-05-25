@@ -1,4 +1,3 @@
-using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -29,13 +28,13 @@ public class TileView : UIButtonAbstract<UnityEvent<int>> {
     public void DisplayVotes(List<int> indexes) {
         for (int i = 0; i < indexes.Count; i++) {
             _voteSpots[i].GetComponent<Image>().color = GameUtilsAndConsts.ColorFromPlayerID(i);
-            _voteSpots[i].transform.DOScale(Vector3.one * (indexes[i] == _index ? 1 : 0), GameUtilsAndConsts.ANIM_DURATION);
+            HomeTween.TweenLocalScale(_rectTransform, Vector3.one * (indexes[i] == _index ? 1 : 0), _tweenSettings).FireAndForget();
         }
     }
 
     public void Highlight(bool highlight) {
         Color targetColor = highlight ? _uiStyle.Light.SetAlpha(0.5f) : _uiStyle.Light.SetAlpha(0f);
-        HomeTween.TweenColor(_highlight, targetColor, _tweenSettings);
+        HomeTween.TweenColor(_highlight, targetColor, _tweenSettings).FireAndForget();
     }
 
     public override void OnPointerClick(PointerEventData eventData) {

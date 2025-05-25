@@ -21,9 +21,10 @@ public class MapModel {
 
 
     public TileModel[] CreateTileRow() {
-        int rowSize = UnityEngine.Random.Range(1, 5);
+        int rowSize = UnityEngine.Random.Range(2, 6);
         int[] array = WeightedGenerator.GenerateArray(rowSize);
         TileModel[] result = array.Select(x => new TileModel(TileType.Fight)).ToArray();
+        //TileModel[] result = array.Select(x => new TileModel((TileType)x)).ToArray();
 
         return result;
     }
@@ -43,7 +44,7 @@ public class MapModel {
 
     //Votes
     public void CreatePlayer() {
-        CurrentVote.Add(GameUtilsAndConsts.EMPTY_VOTE);
+        CurrentVote.Add(GameUtilsAndConsts.EMPTY_INT);
     }
 
     public void UpdateVotes(int playerId, int value, out List<int> result) {
@@ -52,12 +53,12 @@ public class MapModel {
     }
 
     public VoteResult GetVoteResult() {
-        VoteResult result = new VoteResult(false, GameUtilsAndConsts.EMPTY_VOTE, 0);
+        VoteResult result = new VoteResult(false, GameUtilsAndConsts.EMPTY_INT, 0);
         TileModel[] row = TileRows.Last();
 
         int maxCount = CurrentVote.GroupBy(n => n).Max(g => g.Count());
         List<int> voteResults = CurrentVote.GroupBy(n => n).Where(g => g.Count() == maxCount).Select(g => g.Key).ToList();
-        voteResults = voteResults.Select(n => n).Where(n => n != GameUtilsAndConsts.EMPTY_VOTE).ToList();
+        voteResults = voteResults.Select(n => n).Where(n => n != GameUtilsAndConsts.EMPTY_INT).ToList();
 
         if (voteResults.Count == 1) {
             int index = voteResults.First();
@@ -79,6 +80,6 @@ public class MapModel {
 
     public void ClearVotes() {
         for (int i = 0; i < CurrentVote.Count; i++)
-            CurrentVote[i] = GameUtilsAndConsts.EMPTY_VOTE;
+            CurrentVote[i] = GameUtilsAndConsts.EMPTY_INT;
     }
 }

@@ -1,9 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ViewFight : ViewWildBurnt {
-    public override void Init(params object[] parameters) {
-        base.Init(parameters);
+    #region Variables
+    [SerializeField] private RectTransform _top;
+    [SerializeField] private RectTransform _bot;
 
-        Debug.Log("test fight");
+    [SerializeField] private GameObject _prefab;
+
+    private List<ItemView> _itemViews;
+    #endregion
+
+
+    private void Awake() {
+        _itemViews = new List<ItemView>();
     }
 }

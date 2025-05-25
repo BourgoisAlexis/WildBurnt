@@ -1,19 +1,21 @@
-using DG.Tweening;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class CoinView : MonoBehaviour {
+public class CoinFlipView : MonoBehaviour {
+    #region Variables
     [SerializeField] private GameObject[] _faces;
-    [SerializeField] private Ease _initEase;
-    [SerializeField] private Ease _inEase;
-    [SerializeField] private Ease _outEase;
-    [SerializeField] private float _duration;
+    [SerializeField] private SimpleTweenSettings _initEase;
+    [SerializeField] private SimpleTweenSettings _inEase;
+    [SerializeField] private SimpleTweenSettings _outEase;
+    [SerializeField] private SimpleTweenSettings _flipEase;
     [SerializeField] private float _height;
     [SerializeField] private float _startHeight;
     [SerializeField] private int _spinNumber;
 
     private RectTransform _rectTransform;
     private int _offSet;
+    #endregion
+
 
     private void Awake() {
         _rectTransform = GetComponent<RectTransform>();
@@ -22,22 +24,25 @@ public class CoinView : MonoBehaviour {
         _faces[1].SetActive(_offSet % 2 != 0);
     }
 
+
     public async Task Flip() {
-        await _rectTransform.DOLocalMoveY(_startHeight, _duration).SetEase(_initEase).AsyncWaitForCompletion();
-        SecondaryAnim(_duration * 1.3f);
-        await _rectTransform.DOLocalMoveY(_height, _duration).SetEase(_inEase).AsyncWaitForCompletion();
-        await _rectTransform.DOLocalMoveY(0, _duration).SetEase(_outEase).AsyncWaitForCompletion();
+        await HomeTween.TweenLocalPositionY(_rectTransform, _startHeight, _initEase);
+        SecondaryAnim(_inEase.Duration + _outEase.Duration * 0.4f);
+        await HomeTween.TweenLocalPositionY(_rectTransform, _height, _inEase);
+        await HomeTween.TweenLocalPositionY(_rectTransform, 0, _outEase);
     }
 
     private async void SecondaryAnim(float duration) {
         float spinN = (float)(_spinNumber + Random.Range(0, _faces.Length));
         duration /= spinN * 2;
 
+        _flipEase.Duration = duration;
+
         for (int i = _offSet; i < spinN; i++) {
-            await _rectTransform.DOScaleY(0, duration).AsyncWaitForCompletion();
+            await HomeTween.TweenLocalScaleY(_rectTransform, 0, _flipEase);
             _faces[0].SetActive(i % 2 == 0);
             _faces[1].SetActive(i % 2 != 0);
-            await _rectTransform.DOScaleY(1, duration).AsyncWaitForCompletion();
+            await HomeTween.TweenLocalScaleY(_rectTransform, 1, _flipEase);
         }
     }
 }

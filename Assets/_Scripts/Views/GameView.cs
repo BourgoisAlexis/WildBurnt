@@ -13,12 +13,13 @@ public class GameView : SubManager {
     [SerializeField] private ViewLoot _viewLoot;
     [SerializeField] private ViewFight _viewFight;
     [Header("SubViews")]
-    [SerializeField] private CoinView _coinView;
+    [SerializeField] private CoinFlipView _coinView;
     [SerializeField] private TransitionView _transitionView;
     #endregion
 
 
-    private void Start() {
+    public override void Init(GameManager manager, params object[] parameters) {
+        base.Init(manager, parameters);
         _viewManager.Init(this);
         _coinView.gameObject.SetActive(false);
         _transitionView.gameObject.SetActive(false);

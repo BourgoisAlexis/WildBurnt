@@ -10,7 +10,7 @@ public class GameModel {
     public List<bool> Readys { get; private set; }
     public MapModel MapModel { get; private set; }
     public LootModel LootModel { get; private set; }
-    //public FightModel FightModel { get; private set; }
+    public FightModel FightModel { get; private set; }
     #endregion
 
 
@@ -20,6 +20,7 @@ public class GameModel {
         Readys = new List<bool>();
         MapModel = new MapModel();
         LootModel = new LootModel();
+        FightModel = new FightModel();
     }
 
 
@@ -53,7 +54,7 @@ public class GameModel {
         NetworkUtilsAndConsts.LogError("Trying to get votes out of GamePhase.Map");
         result = new List<int>();
         foreach (PlayerModel player in PlayerModels)
-            result.Add(GameUtilsAndConsts.EMPTY_VOTE);
+            result.Add(GameUtilsAndConsts.EMPTY_INT);
     }
 
     public void ClearVotes() {
@@ -75,12 +76,17 @@ public class GameModel {
 
 
     public void LootTaken(int playerId, int lootIndex, int itemId) {
-        LootModel.TakeLoot(lootIndex);
+        LootModel.RemoveLoot(lootIndex);
         PlayerModels[playerId].CharacterModel.AddItemToInventory(itemId);
     }
 
 
     public void GearEquiped(PlayerModel updatedModel) {
         PlayerModels[updatedModel.Id].CharacterModel.UpdateInventory(updatedModel.CharacterModel);
+    }
+
+
+    public void CreateFightBoard(CharacterModel[][] board) {
+        FightModel.CreateBoard(board[0], board[1]);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,36 +11,52 @@ public static class Extensions {
     public static float[] ToArray(this Vector4 v) => new float[] { v.x, v.y, v.z, v.w };
     public static float[] ToArray(this Color c) => new float[] { c.r, c.g, c.b, c.a };
 
-    public static Vector4 ToVector(this float[] array) => new Vector4(array[0], array[1], array[2], array[3]);
+    public static Vector2 ToVector2(this float[] array) => new Vector2(array[0], array[1]);
+    public static Vector3 ToVector3(this float[] array) => new Vector3(array[0], array[1], array[2]);
+    public static Vector4 ToVector4(this float[] array) => new Vector4(array[0], array[1], array[2], array[3]);
 }
 
 public static class HomeTween {
     public static async Task TweenPosition(Transform t, Vector3 target, SimpleTweenSettings settings) {
-        await ExecuteTween(t.position.ToArray(), target.ToArray(), (float[] array) => t.position = array.ToVector(), settings);
+        await ExecuteTween(t.position.ToArray(), target.ToArray(), (float[] array) => t.position = array.ToVector3(), settings);
     }
 
     public static async Task TweenLocalPosition(Transform t, Vector3 target, SimpleTweenSettings settings) {
-        await ExecuteTween(t.localPosition.ToArray(), target.ToArray(), (float[] array) => t.localPosition = array.ToVector(), settings);
+        await ExecuteTween(t.localPosition.ToArray(), target.ToArray(), (float[] array) => t.localPosition = array.ToVector3(), settings);
+    }
+
+    public static async Task TweenLocalPositionY(Transform t, float value, SimpleTweenSettings settings) {
+        Vector3 target = new Vector3(t.localPosition.x, value, t.localPosition.z);
+        await TweenLocalPosition(t, target, settings);
     }
 
     public static async Task TweenLocalScale(Transform t, Vector3 target, SimpleTweenSettings settings) {
-        await ExecuteTween(t.localScale.ToArray(), target.ToArray(), (float[] array) => t.localScale = array.ToVector(), settings);
+        await ExecuteTween(t.localScale.ToArray(), target.ToArray(), (float[] array) => t.localScale = array.ToVector3(), settings);
     }
 
-    public static async Task TweenSizeDelta(RectTransform t, Vector3 target, SimpleTweenSettings settings) {
-        await ExecuteTween(t.sizeDelta.ToArray(), target.ToArray(), (float[] array) => t.sizeDelta = array.ToVector(), settings);
+    public static async Task TweenLocalScaleY(Transform t, float value, SimpleTweenSettings settings) {
+        Vector3 target = new Vector3(t.localScale.x, value, t.localScale.z);
+        await TweenLocalScale(t, target, settings);
     }
 
-    public static async Task TweenAnchorMax(RectTransform t, Vector3 target, SimpleTweenSettings settings) {
-        await ExecuteTween(t.anchorMax.ToArray(), target.ToArray(), (float[] array) => t.anchorMax = array.ToVector(), settings);
+    public static async Task TweenSizeDelta(RectTransform t, Vector2 target, SimpleTweenSettings settings) {
+        await ExecuteTween(t.sizeDelta.ToArray(), target.ToArray(), (float[] array) => t.sizeDelta = array.ToVector2(), settings);
     }
 
-    public static async Task TweenAnchorMin(RectTransform t, Vector3 target, SimpleTweenSettings settings) {
-        await ExecuteTween(t.anchorMin.ToArray(), target.ToArray(), (float[] array) => t.anchorMin = array.ToVector(), settings);
+    public static async Task TweenAnchorMax(RectTransform t, Vector2 target, SimpleTweenSettings settings) {
+        await ExecuteTween(t.anchorMax.ToArray(), target.ToArray(), (float[] array) => t.anchorMax = array.ToVector2(), settings);
+    }
+
+    public static async Task TweenAnchorMin(RectTransform t, Vector2 target, SimpleTweenSettings settings) {
+        await ExecuteTween(t.anchorMin.ToArray(), target.ToArray(), (float[] array) => t.anchorMin = array.ToVector2(), settings);
     }
 
     public static async Task TweenColor(Image i, Color target, SimpleTweenSettings settings) {
-        await ExecuteTween(i.color.ToArray(), target.ToArray(), (float[] array) => i.color = array.ToVector(), settings);
+        await ExecuteTween(i.color.ToArray(), target.ToArray(), (float[] array) => i.color = array.ToVector4(), settings);
+    }
+
+    public static async Task TweenColor(TextMeshProUGUI t, Color target, SimpleTweenSettings settings) {
+        await ExecuteTween(t.color.ToArray(), target.ToArray(), (float[] array) => t.color = array.ToVector4(), settings);
     }
 
     public static async Task ExecuteTween(float[] start, float[] end, Action<float[]> onUpdate, SimpleTweenSettings settings) {
@@ -67,7 +84,7 @@ public static class HomeTween {
             }
 
         if (!valid) {
-            Debug.Log("start and end values are the same");
+            Debug.LogWarning("start and end values are the same");
             return;
         }
 

@@ -10,15 +10,18 @@ public class GameManager : MonoBehaviour {
 
     [field: SerializeField] public GameModel GameModel { get; private set; }
 
+    private SubManager[] _subManagers;
+
 
     private void Awake() {
         GameModel = new GameModel();
     }
 
     private void Start() {
-        ConnectionManager.Init(this);
-        GameView.Init(this);
-        CharacterView.Init(this);
+        _subManagers = new SubManager[] { ConnectionManager, GameView, CharacterView };
+
+        foreach (SubManager sub in _subManagers)
+            sub.Init(this);
     }
 
 

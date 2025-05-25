@@ -1,9 +1,9 @@
-using DG.Tweening;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TransitionView : MonoBehaviour {
+    [SerializeField] private SimpleTweenSettings _tweenSettings;
     [SerializeField] private Image _mainVisual;
 
     public async Task Transition(bool transiIn, VoteResult result) {
@@ -11,6 +11,6 @@ public class TransitionView : MonoBehaviour {
         Transform t = _mainVisual.transform;
 
         t.localScale = Vector3.one * (transiIn ? 0 : 100);
-        await t.DOScale(transiIn ? 100 : 0, 0.5f).SetEase(transiIn ? Ease.InExpo : Ease.OutExpo).AsyncWaitForCompletion();
+        await HomeTween.TweenLocalScale(t, Vector3.one * (transiIn ? 100 : 0), _tweenSettings);
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class TestButtonEditor : Editor {
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
+
         if (GUILayout.Button("Test")) {
             TestButton b = target as TestButton;
             b.Test();

@@ -44,17 +44,17 @@ public class CharacterView : SubManager {
         if (_shown) {
             _characterButtons[_focusIndex].SetSelected(false);
             if (index == _focusIndex) {
-                HideAnim();
+                HideAnim().FireAndForget();
             }
             else {
                 await HideAnim();
                 _characterButtons[index].SetSelected(true);
-                ShowAnim(index);
+                ShowAnim(index).FireAndForget();
             }
         }
         else {
             _characterButtons[index].SetSelected(true);
-            ShowAnim(index);
+            ShowAnim(index).FireAndForget();
         }
 
         _focusIndex = index;
@@ -81,7 +81,7 @@ public class CharacterView : SubManager {
     }
 
     private async Task HideAnim() {
-        await HomeTween.TweenAnchorMin(_parentView, _initMin, new SimpleTweenSettings());
+        await HomeTween.TweenAnchorMax(_parentView, _initMin, new SimpleTweenSettings());
         _parentView.gameObject.SetActive(false);
         ClearInventoryView();
         _shown = false;

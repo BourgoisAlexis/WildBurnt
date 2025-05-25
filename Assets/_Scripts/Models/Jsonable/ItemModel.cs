@@ -17,6 +17,6 @@ public struct ItemModel {
     }
 
     public static ItemModel Empty() {
-        return new ItemModel(GameUtilsAndConsts.EMPTY_ITEM, new StatModel(0, 0, 0, 0));
+        return new ItemModel(GameUtilsAndConsts.EMPTY_INT, new StatModel(0, 0, 0, 0));
     }
 }

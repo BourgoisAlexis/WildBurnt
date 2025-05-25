@@ -1,6 +1,6 @@
+using System;
 using UnityEditor;
 using UnityEngine;
-using System;
 
 public class DataLoader : MonoBehaviour {
     public static DataLoader Instance;
@@ -40,7 +40,7 @@ public class DataLoader : MonoBehaviour {
     }
 
     public ItemModel LoadItemModel(int id) {
-        if (id == GameUtilsAndConsts.EMPTY_ITEM)
+        if (id == GameUtilsAndConsts.EMPTY_INT)
             return ItemModel.Empty();
 
         ItemScriptable item = Array.Find(ItemScriptables, x => x.Id == id);

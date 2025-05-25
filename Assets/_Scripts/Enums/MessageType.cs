@@ -32,5 +32,6 @@ public enum MessageType {
     GearUnequiped,
 
     //Fight
+    CreateFightBoard,
     UseAbility,
 }

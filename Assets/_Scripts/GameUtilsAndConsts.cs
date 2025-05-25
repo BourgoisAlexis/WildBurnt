@@ -1,13 +1,11 @@
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
 public static class GameUtilsAndConsts {
     public static float ANIM_DURATION = 0.15f;  //See uielement consts
 
     public static int SHOWING_ROWS = 2;
-    public static int EMPTY_VOTE = -1;
-    public static int EMPTY_ITEM = -1;
+    public static int EMPTY_INT = -1;
     public static string EMPTY_MESSAGE = "Empty";
     public static float MESSAGE_DELAY = 0.3f;
 
@@ -53,6 +51,11 @@ public static class GameUtilsAndConsts {
         RectTransform rect = go.GetComponent<RectTransform>();
         rect.localPosition = Vector3.zero;
         rect.localScale = Vector3.zero;
-        rect.DOScale(Vector3.one, ANIM_DURATION);
+        HomeTween.TweenLocalScale(rect, Vector3.one, new SimpleTweenSettings()).FireAndForget();
+    }
+
+
+    public static string ColorString(this string s) {
+        return $"<color=cyan>{s}</color>";
     }
 }

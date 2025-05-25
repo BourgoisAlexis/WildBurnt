@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
 public class ViewMap : ViewWildBurnt {
@@ -57,7 +56,8 @@ public class ViewMap : ViewWildBurnt {
             foreach (TileView tile in _tileRows[i]) {
                 tile.SetInteractable(i == _nextRowIndex);
                 RectTransform rect = tile.GetComponent<RectTransform>();
-                rect.DOLocalMoveY(y, GameUtilsAndConsts.ANIM_DURATION);
+                Vector3 desti = rect.localPosition + Vector3.up * y;
+                HomeTween.TweenLocalPosition(rect, desti, _tweenSettings).FireAndForget();
             }
         }
     }

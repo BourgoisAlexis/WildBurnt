@@ -798,6 +798,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1196291975}
     m_Modifications:
+    - target: {fileID: 49389585283086573, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 49389585283086573, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 49389585283086573, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 810657027998638365, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -972
+      objectReference: {fileID: 0}
+    - target: {fileID: 7986318340522322821, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8343354234357578714, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1375,6 +1395,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1196291975}
     m_Modifications:
+    - target: {fileID: 49389585283086573, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 49389585283086573, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 49389585283086573, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 810657027998638365, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -972
+      objectReference: {fileID: 0}
     - target: {fileID: 820830713730017423, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
       propertyPath: _host
       value: 1
@@ -1387,6 +1423,10 @@ PrefabInstance:
       propertyPath: _uiDatas.Icon
       value: 
       objectReference: {fileID: 2096827459}
+    - target: {fileID: 7986318340522322821, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8343354234357578714, guid: 9f98def0c8d865e4faa73fe724ff6f50, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

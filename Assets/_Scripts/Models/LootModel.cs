@@ -2,13 +2,12 @@ public class LootModel {
     public int[] ItemIds { get; private set; }
     public WeightedGenerator WeightedGenerator { get; private set; }
 
-    private int _numberofItems = 4;
-    //Trouver une meilleure solution pour la length des items possibles
+    private const int ITEM_TYPE_NUMBER = 4;
 
 
     public LootModel() {
         ItemIds = new int[0];
-        WeightedGenerator = new WeightedGenerator(_numberofItems, 1);
+        WeightedGenerator = new WeightedGenerator(ITEM_TYPE_NUMBER, 1);
     }
 
 
@@ -16,9 +15,9 @@ public class LootModel {
         ItemIds = itemIds;
     }
 
-    public int TakeLoot(int index) {
+    public int RemoveLoot(int index) {
         int result = ItemIds[index];
-        ItemIds[index] = GameUtilsAndConsts.EMPTY_ITEM;
+        ItemIds[index] = GameUtilsAndConsts.EMPTY_INT;
 
         return result;
     }

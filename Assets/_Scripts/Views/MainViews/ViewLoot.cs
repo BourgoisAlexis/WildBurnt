@@ -9,20 +9,20 @@ public class ViewLoot : ViewWildBurnt {
 
     [SerializeField] private GameObject _prefab;
 
-    private List<ItemView> _items;
+    private List<ItemView> _itemViews;
     #endregion
 
 
     private void Awake() {
-        _items = new List<ItemView>();
+        _itemViews = new List<ItemView>();
     }
 
 
     private void Clear() {
-        foreach (ItemView itemView in _items)
+        foreach (ItemView itemView in _itemViews)
             Destroy(itemView.gameObject);
 
-        _items.Clear();
+        _itemViews.Clear();
     }
 
     public void AddLoots(int[] itemIds) {
@@ -40,7 +40,7 @@ public class ViewLoot : ViewWildBurnt {
 
         for (int i = 0; i < size; i++) {
             Vector2 pos = new Vector2(i * stepH - offsetH, 0);
-            _items.Add(AddSingleItem(pos, DataLoader.Instance.LoadItemModel(itemIds[i]), i));
+            _itemViews.Add(AddSingleItem(pos, DataLoader.Instance.LoadItemModel(itemIds[i]), i));
         }
     }
 
@@ -59,7 +59,7 @@ public class ViewLoot : ViewWildBurnt {
     }
 
     public void LootTaken(int index) {
-        _items[index].SetInteractable(false);
+        _itemViews[index].SetInteractable(false);
     }
 
 
