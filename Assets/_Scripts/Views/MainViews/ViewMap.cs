@@ -66,7 +66,7 @@ public class ViewMap : ViewWildBurnt {
         GameObject go = Instantiate(_prefab, _rectTransform);
         TileView tile = go.GetComponent<TileView>();
 
-        go.AnimateRectTransform();
+        go.RectScaleIn();
         go.transform.localPosition = position;
 
         tile.Init(tileModel, index);

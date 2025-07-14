@@ -1792,9 +1792,9 @@ MonoBehaviour:
     Icon: {fileID: 0}
     Text: {fileID: 5531995780441216015}
   _backButton: {fileID: 0}
-  _top: {fileID: 0}
-  _bot: {fileID: 0}
-  _prefab: {fileID: 0}
+  _top: {fileID: 7114081672015023447}
+  _bot: {fileID: 6917191280611465930}
+  _prefab: {fileID: 6616999397235383866, guid: 911056e4229fc3a478f7ba3de9089396, type: 3}
 --- !u!1 &8114419907594044084
 GameObject:
   m_ObjectHideFlags: 0

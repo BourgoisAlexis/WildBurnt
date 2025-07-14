@@ -1223,6 +1223,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: df4325d551c32b147b5dccd346eb1078, type: 2}
   - {fileID: 11400000, guid: b7457ad1301f6784a8f445f87d55aa04, type: 2}
   - {fileID: 11400000, guid: 6ab6cb81fd1135b4a87a6acbdc630a5c, type: 2}
+  <MobScriptables>k__BackingField:
+  - {fileID: 11400000, guid: 7da55774dd2916b42a54d7c5a259ef4a, type: 2}
+  - {fileID: 11400000, guid: 8921a6bbf2a47fd4cb2d8ccff444e963, type: 2}
 --- !u!4 &1557229013
 Transform:
   m_ObjectHideFlags: 0

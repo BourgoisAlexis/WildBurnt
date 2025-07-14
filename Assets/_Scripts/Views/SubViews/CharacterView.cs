@@ -91,7 +91,7 @@ public class CharacterView : SubManager {
         for (int i = 0; i < items.Length; i++) {
             GameObject go = Instantiate(_prefab, rect);
             ItemView itemView = go.GetComponent<ItemView>();
-            go.AnimateRectTransform();
+            go.RectScaleIn();
 
             itemView.Init(new ItemModel(items[i], new StatModel(0, 0, 0, 0)), i);
 
